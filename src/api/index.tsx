@@ -101,7 +101,14 @@ export async function getQuestionList(quizeId: string | undefined) {
     console.log(error)
   }
 }
-
+export async function postAddQuestionexcel(data: any) {
+  try {
+    console.log(data)
+    return await request.post(`/question/addquestionexcel`, data);
+  } catch (error:any) {
+    return error.response
+  }
+}
 export async function postAddQuestion(data: any) {
   return request.post('/question/addquestion', data);
 }
