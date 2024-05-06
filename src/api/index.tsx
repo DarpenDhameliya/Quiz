@@ -108,6 +108,23 @@ export async function getQuestionList(quizeId: string | undefined) {
     console.log(error);
   }
 }
+
+export async function getFilteredQuestionList(data: string, byQuiz?:boolean, page?:number) {
+  try {
+    return await request.get(`/question/filteredlist/${byQuiz}/?data=${data}&page=${page}`);
+  } catch (error: any) {
+    return error.response
+  }
+}
+
+export async function getAllQuestionList() {
+  try {
+    return await request.get(`/question/list`);
+  } catch (error: any) {
+    return error.response
+  }
+}
+
 export async function postAddQuestionexcel(data: any) {
   try {
     return await request.post(`/question/addquestionexcel`, data);
