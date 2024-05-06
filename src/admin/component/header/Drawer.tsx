@@ -49,8 +49,8 @@ const Sidebar = () => {
         <>
             <Box sx={{ display: "flex" }}>
                 <CssBaseline />
-                {/* <AppBar position="fixed" style={{ background: "#367fa9" }} > */}
-                <AppBar position="fixed" className={classes.appbar} >
+                <AppBar position="fixed" style={{ background: "#367fa9" }} >
+                {/* <AppBar position="fixed" className={classes.appbar} > */}
                     <Toolbar className={classes.setHeadermobile}>
                         <IconButton
                             color="inherit"

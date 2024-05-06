@@ -37,7 +37,7 @@ import Profile from '../page/profile';
 import QuizJoin from '../page/QuizJoin/QuizJoin';
 import SubCategory from '../page/category/subCategory';
 import ResultIndex from '../page/result';
-// import AdLogin from '../auth/login/AdLogin';
+import AdLogin from '../auth/login/AdLogin';
 
 const WebRouter = () => {
   return (
@@ -51,7 +51,7 @@ const WebRouter = () => {
       <Route path='/profile' element={<Profile />} />
       <Route path='/play/:id' element={<QuizJoin />} />
       <Route path='/result' element={<ResultIndex />} />
-      {/* <Route path='/ad-login' element={<AdLogin />} /> */}
+      <Route path='/ad-login' element={<AdLogin />} /> 
     </Routes>
   );
 };

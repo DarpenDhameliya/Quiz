@@ -65,6 +65,7 @@ const Quiz = () => {
         if (Object.keys(quizList).length === 0) {
             quizFetch();
         }
+        // console.log('Where was Elizabeth Blackwell born?' === 'Where was  Elizabeth Blackwell born?')
     }, [])
 
     const handlesenddata = async () => {

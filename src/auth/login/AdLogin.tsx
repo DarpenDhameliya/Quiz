@@ -75,7 +75,7 @@ const AdLogin = () => {
                         { variant: 'success' },
                     )
                 }
-                // nevigate('/dashboard')
+                nevigate('/admin/quiz')
             } else {
                 enqueueSnackbar(
                     responce.data.error,

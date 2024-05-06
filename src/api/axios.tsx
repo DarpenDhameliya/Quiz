@@ -5,8 +5,8 @@ const getToken = (): string | null => {
 };
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: 'http://192.168.0.42:8000/api/',
-    // baseURL: 'http://192.168.0.123:8000/api/',
+    baseURL: 'http://localhost:8000/api/',
+    // baseURL: 'http://192.168.29.141:8000/api/',
     // withCredentials: true,
 });
 

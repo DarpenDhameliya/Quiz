@@ -44,3 +44,11 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+create migration
+node migration.js add migration migration_name
+
+for apply migration
+node migration.js run filename.js up
+filename is like -- 1714798101594_create_table_examtaken

@@ -84,7 +84,9 @@ const Question = () => {
                         <Paper className={classes.setProductpaper} elevation={5}>
                             <div className='flex'>
 
-                                <TextField type='file' id="category_id" size="small" variant="outlined" className={`m-0 w-full`} placeholder="image * " InputLabelProps={{ shrink: false }} onChange={handleImageChnage} />
+                                {/* <TextField type='file' id="category_id" size="small" variant="outlined" className={`m-0 w-full`} placeholder="image * " InputLabelProps={{ shrink: false }} onChange={handleImageChnage} /> */}
+                                <TextField type='file' name="image" size="small" variant="outlined" className={`m-0 w-full`} placeholder="image * " InputLabelProps={{ shrink: false }} onChange={handleImageChnage} />
+
                                 {error && <span>{error}</span>}
                                 <div className={`ml-5`}>
 
