@@ -48,7 +48,6 @@ const Quiz = () => {
     const [entryFee, setEntryFee] = useState('')
     const [live, setLive] = useState(false)
     const [category_id, setCategory_id] = useState('')
-    const [image, setImage] = useState<File | null>(null)
     const [encodeUrl, setEncodeUrl] = useState('')
     const [updateId, setUpdateId] = useState('')
     const classes = useQuizStyles()
