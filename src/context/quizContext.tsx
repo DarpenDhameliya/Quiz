@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { getQuizList } from '../api/index';
+import { useNavigate } from 'react-router-dom';
 
 type quizContextType = {
     quizList: any;
@@ -23,16 +24,20 @@ export const AppContext = createContext<quizContextType>({
 // Create a provider for the context
 export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     const [quizList, setQuizList] = useState({})
-
+    const nevigate = useNavigate();
     const { data: quiz, isLoading: quizLoading, isFetching: quizFetching, refetch: quizFetch, error: quizerror } = useQuery(
         'get-quiz-list',
         async () => await getQuizList(),
         { enabled: false }
     );
+
     useEffect
         (() => {
             if (quiz) {
                 setQuizList(quiz.data)
+                if (quiz.status === 401) {
+                    nevigate('/login')
+                }
             }
         }, [quiz])
 

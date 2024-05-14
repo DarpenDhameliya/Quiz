@@ -13,7 +13,6 @@ const useHeaderStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         height: "50px",
-        // boxShadow: 'rgb(17 24 39 / 5%) 0px 15px 15px',
     },
     lefticon: {
         width: "16px",
@@ -21,7 +20,6 @@ const useHeaderStyles = makeStyles((theme) => ({
         cursor: 'pointer',
         padding: "8px",
         color: 'var(--white-color)',
-        // backgroundColor: 'var(--whitebglight-color)',
         borderRadius: "10px",
         display: "flex",
         marginRight: 5,
@@ -31,7 +29,6 @@ const useHeaderStyles = makeStyles((theme) => ({
     logo: {
         minWidth: "15px",
         maxWidth: "25px",
-        // marginRight: '5px',
         marginBottom: "10px"
     },
     headerReward: {

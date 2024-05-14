@@ -9,7 +9,6 @@ import WorkSpace from "../../components/container";
 import adsImg from "../../asset/logo/add.jpg";
 import {
   getQuestionList,
-  getQuizAttempList,
   postAddQuizAttempt,
   postUpdateUserWallet,
 } from "../../api";
@@ -38,6 +37,7 @@ const QuizJoin: React.FC = () => {
   const nevigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [openLifeline, setOpenLifeline] = useState(false);
+  const [totalScore, setTotalScore] = useState(0)
   const [lifeLineOpetion, setlifeLineOpetion] = useState({
     fiftyFifty: true,
     audience: true,
@@ -66,63 +66,63 @@ const QuizJoin: React.FC = () => {
 
   useEffect(() => {
     if (examename) {
-      if (userfind) {
-        refetch();
-      } else {
-        const sessiondata = sessionStorage.getItem("quiz");
-        const parseData = sessiondata && JSON.parse(sessiondata);
-        if (parseData) {
-          const compareParseData = parseData.find(
-            (id: string) => id === examename.id
-          );
-          if (compareParseData) {
-            nevigate("/home");
-          } else {
-            refetch();
-          }
+        if (userfind) {
+            refetch()
+        } else {
+            const sessiondata = sessionStorage.getItem('quiz')
+            const parseData = sessiondata && JSON.parse(sessiondata)
+            if (parseData) {
+                const compareParseData = parseData.find((id: string) => id === examename.id)
+                if (compareParseData) {
+                    nevigate('/home')
+                } else {
+                    refetch()
+                }
+            }
         }
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [examename]);
+}, [examename])
 
-  const getAnsuser = (ans: string, index: number) => {
-    if (progress < 99) {
+const getAnsuser = (ans: string, index: number) => {
+  if (progress < 99) {
+
       setTimerPaused(false);
       // setProgress(0)
       if (ans === questinsList?.correct) {
-        setCorrectAns(index);
-        setWinAmount((amount) => amount + 50);
+          setCorrectAns(index);
+          setWinAmount((amount) => amount + 50)
+          setTotalScore((amount) => amount + 50)
       } else {
-        const correctAnsIndex: number | undefined | null =
-          questinsList?.answer.findIndex(
-            (answer) => answer === questinsList?.correct
-          );
-        setCorrectAns(correctAnsIndex);
-        setWrongans(index);
-        setLoseAmount((amount) => amount - 25);
+          const correctAnsIndex: number | undefined | null =
+              questinsList?.answer.findIndex(
+                  (answer) => answer === questinsList?.correct
+              );
+          setCorrectAns(correctAnsIndex);
+          setWrongans(index);
+          setLoseAmount((amount) => amount - 25)
+          setTotalScore((amount) => amount - 25)
+
       }
       setTimeout(() => {
-        setWrongans(null);
-        setCorrectAns(null);
-        let applians = AppliedAns + 1;
-        setAppliedAns(applians);
-        if (applians <= 15) {
-          setQuestinsList(questinsListsave[applians]);
-        }
+          setWrongans(null);
+          setCorrectAns(null);
+          let applians = AppliedAns + 1;
+          setAppliedAns(applians);
+          if (applians <= 15) {
+              setQuestinsList(questinsListsave[applians]);
+          }
       }, 500);
-    }
-  };
+  }
+};
 
-  useEffect(() => {
-    if (questionList) {
-      const alternateArray = [...questionList.data.response].sort(
-        () => Math.random() - 0.5
-      );
+useEffect(() => {
+  if (questionList) {
+      const alternateArray = [...questionList.data.response].sort(() => Math.random() - 0.5);
       setQuestinsListsave(alternateArray);
       setQuestinsList(alternateArray[0]);
-    }
-  }, [questionList]);
+  }
+}, [questionList])
 
   const QuestionView = useCallback(() => {
     if (questinsList !== null && progress < 99) {
@@ -141,7 +141,7 @@ const QuizJoin: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!timerPaused && progress < 100) {
-        setProgress((prev) => prev + 100 / 10);
+        setProgress((prev) => prev + 100 / 120);
       } else {
         clearInterval(timer);
       }
@@ -190,10 +190,8 @@ const QuizJoin: React.FC = () => {
           if (sessionStorage.getItem("quiz") === null) {
             let quizeArray = [];
             quizeArray.push(examename.id);
-            // localStorage.setItem('quiz', JSON.stringify(quizeArray))
             sessionStorage.setItem("quiz", JSON.stringify(quizeArray));
           } else {
-            // let quizeoldArray = localStorage.getItem('quiz')
             let quizeoldArray = sessionStorage.getItem("quiz");
             if (quizeoldArray) {
               let quizeArray = JSON.parse(quizeoldArray);
@@ -204,15 +202,14 @@ const QuizJoin: React.FC = () => {
         }
         sessionStorage.setItem("date", new Date().getDate().toString());
         if (userfind) {
-          const dbData = {
-            start_time: startTime,
-            total_time: totalTiming,
-            score: totalScore,
-            quiz_id: examename.id,
-          };
-          console.log(dbData);
-          const attemp = await postAddQuizAttempt(dbData);
-          console.log(attemp);
+          // const dbData = {
+          //   start_time: startTime,
+          //   total_time: totalTiming,
+          //   score: totalScore,
+          //   quiz_id: examename.id,
+          // };
+          // const attemp = await postAddQuizAttempt(dbData);
+          // console.log(attemp);
           const walletupdate = await postUpdateUserWallet(coin, "add");
           if (walletupdate.data.status === "ok") {
             walletFetch();

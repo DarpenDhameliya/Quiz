@@ -15,14 +15,6 @@ import { useQuiz } from '../../context/quizContext';
 import { useWallet } from '../../context/walletContext';
 import { cardvalue } from '../../components/type';
 
-// interface cardvalue {
-//     id: number;
-//     name: string;
-//     totalPrice: string;
-//     entryFee: number;
-//     image: string;
-// }
-
 const Joinexame = () => {
 
     const [findCardValue, setFindCardValue] = useState<cardvalue | undefined>(undefined)
@@ -31,7 +23,7 @@ const Joinexame = () => {
     const examename = useParams()
     const { enqueueSnackbar } = useSnackbar();
     const { quizList, quizLoading, quizFetching, quizFetch } = useQuiz();
-    const { walletList, walleterror, walletFetching, walletLoading, walletFetch } = useWallet();
+    const { walletFetch } = useWallet();
     const [open, setOpen] = useState(false);
     const [openAds, setOpenAds] = useState(false);
 
@@ -44,7 +36,6 @@ const Joinexame = () => {
 
     useEffect(() => {
         if (Object.keys(quizList).length !== 0) {
-            console.log(quizList.response, examename.id)
             let findcardval: cardvalue | undefined = quizList.response.find((res: any) => res.id == examename.id)
             setFindCardValue(findcardval)
         }
@@ -69,12 +60,12 @@ const Joinexame = () => {
         const response = await getQuestionList(examename.id)
         if (response?.data.status === 'ok') {
             if (response.data.response.length > 0) {
+                // let dateCheck = localStorage.getItem('date')
                 let dateCheck = sessionStorage.getItem('date')
                 let coin = sessionStorage.getItem('coin')
                 if (dateCheck) { // if date exist then enter 
                     if (new Date().getDate() === parseInt(dateCheck)) { // if localhost date is same as todays dame then enter the block and check for clicked quiz is given or not 
                         let quizData = sessionStorage.getItem('quiz')
-                        console.log(quizData)
                         if (quizData) {
                             let QuizArray = JSON.parse(quizData).find((data: string) => data === examename.id)
                             if (QuizArray) {
@@ -92,7 +83,7 @@ const Joinexame = () => {
                         } else {
                             nevigate(`/play/${examename.id}`)
                         }
-                    } else {
+                    } else { // if date is not same then cleare date and quize id from sessionStorage and entered
                         sessionStorage.removeItem('quiz')
                         sessionStorage.removeItem('date')
                         if (coin && findCardValue) {
@@ -116,6 +107,7 @@ const Joinexame = () => {
             }
         }
     }
+    
     const userData = localStorage.getItem('token')
     const moveloginpage = () => {
         nevigate(`/login`)
@@ -125,7 +117,6 @@ const Joinexame = () => {
         const response = await getQuestionList(examename.id)
         if (response?.data.status === 'ok') {
             if (response.data.response.length > 0) {
-
                 if (findCardValue) {
                     const walletupdate = await postUpdateUserWallet(findCardValue.entryFee, 'remove')
                     if (walletupdate.data.status === 'ok') {
@@ -144,8 +135,16 @@ const Joinexame = () => {
                     { variant: 'error', autoHideDuration: 2000 },
                 );
             }
+        } else {
+            if (response) {
+                enqueueSnackbar(
+                    'Server Error',
+                    { variant: 'error', autoHideDuration: 2000 },
+                );
+            }
         }
     }
+
 
     return (
         <>

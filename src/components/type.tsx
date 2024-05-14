@@ -4,7 +4,7 @@ export interface cardvalue {
     totalPrice: string;
     entryFee: number;
     image: string;
-    category_id: number;
+    category_id?: number;
     live: number;
 }
 

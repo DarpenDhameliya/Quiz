@@ -22,12 +22,11 @@ const SubCategory = () => {
         if (Object.keys(quizList).length === 0) {
             quizFetch();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
         if (Object.keys(quizList).length !== 0) {
-            let finddata = quizList.response.filter((data: cardvalue) => data.name === categorydata.id)
+            let finddata = quizList.response.filter((data: cardvalue) => { return data.name === categorydata.id && data.live !== 0 })
             setCardList(finddata)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,13 +37,14 @@ const SubCategory = () => {
             nevigate(`/show/${data}`)
         }
         return (<>
-            {cardList?.map((data:cardvalue) => {
+            {/* {cardList?.map((data:cardvalue) => { */}
+            {cardList?.map((data: any) => {
                 return <HomeCard data={data} handleclick={handleclick} />
             })}
         </>)
 
     }, [cardList, nevigate])
-    
+
     return (
         <WorkSpace>
             <Paper className={classes.setProductpape} elevation={5}>

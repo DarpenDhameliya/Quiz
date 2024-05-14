@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
@@ -27,13 +27,17 @@ const Sidebar = () => {
     const [menu, setMenu] = useState<MenuItem[]>([]);
     const classes = useStyleDrawer();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleMobileSidebar = useCallback(() => {
         setMobileSidebaropen(!mobileSidebaropen);
     }, [mobileSidebaropen]);
 
+
     const handleLogout = useCallback(() => {
-        console.log('logout')
+        navigate('/ad-login')
+        localStorage.removeItem('email')
+        localStorage.removeItem('token')
     }, [])
 
 
@@ -50,7 +54,6 @@ const Sidebar = () => {
             <Box sx={{ display: "flex" }}>
                 <CssBaseline />
                 <AppBar position="fixed" style={{ background: "#367fa9" }} >
-                {/* <AppBar position="fixed" className={classes.appbar} > */}
                     <Toolbar className={classes.setHeadermobile}>
                         <IconButton
                             color="inherit"

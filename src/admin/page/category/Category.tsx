@@ -1,41 +1,18 @@
 
-import React, { lazy, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommonContainer from '../../component/container/Container';
 import Paper from '@mui/material/Paper'
-import Container from "@mui/material/Container";
 import useQuizStyles from './QuizStyle';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Button, Card, CardActions, CardContent, CardMedia, Divider, Table, TableBody, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 import { getCategoryList, postAddCategory, postDeleteCategory, postEditCategory } from '../../../api';
-import { useQuery } from 'react-query';
 import { useApp } from '../../../context/categoryContext';
-import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { useSnackbar } from 'notistack';
 import { FaEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-        border: 0,
-    },
-}));
+import { useNavigate } from 'react-router-dom';
 
 const Category = () => {
     const [name, setName] = useState('')
@@ -46,6 +23,7 @@ const Category = () => {
     const { categoryList, categoryFetch, categoryLoading, categoryFetching } = useApp();
     const [error, setError] = useState('')
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
 
     useEffect(() => {
         categoryFetch();
@@ -54,9 +32,17 @@ const Category = () => {
     const handleImageChnage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setImage(file)
-            const displayImg = URL.createObjectURL(file);
-            setEncodeUrl(displayImg)
+            const extension = file.name.split('.').pop()?.toLowerCase(); // Get the file extension
+            if (extension === 'jpeg' || extension === 'jpg' || extension === 'png') {
+                setImage(file);
+                const displayImg = URL.createObjectURL(file);
+                setEncodeUrl(displayImg);
+            } else {
+                enqueueSnackbar(
+                    'Please select a JPEG, JPG, PNG file.',
+                    { variant: 'error', autoHideDuration: 3000 },
+                );
+            }
         }
     }
 
@@ -85,11 +71,13 @@ const Category = () => {
                     );
                     categoryFetch();
                 } else {
-                    console.log(response, '-0=-0=0=-0=0')
                     enqueueSnackbar(
                         response?.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
+                    if (response.status === 401) {
+                        navigate('/login')
+                    }
                 }
             }
         } else {
@@ -113,11 +101,13 @@ const Category = () => {
                     );
                     categoryFetch();
                 } else {
-                    console.log(response?.data, '-0=-0=0=-0=0')
                     enqueueSnackbar(
                         response?.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
+                    if (response.status === 401) {
+                        navigate('/login')
+                    }
                 }
             }
         }
@@ -149,6 +139,9 @@ const Category = () => {
                 response?.data.error,
                 { variant: 'error', autoHideDuration: 2000 },
             );
+            if (response.status === 401) {
+                navigate('/login')
+            }
         }
     }
 
@@ -257,10 +250,6 @@ const Category = () => {
                     </Grid>
                 </Grid>
             </CommonContainer>
-
-            {/* <CommonContainer heading={'Payment Report'} > */}
-            {/* </CommonContainer> */}
-            {/* <BackdropComponent open={loder} /> */}
         </>
     )
 }

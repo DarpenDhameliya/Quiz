@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 import Paper from '@mui/material/Paper'
@@ -9,8 +9,6 @@ import usecategoryStyles from './Category';
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 import WorkSpace from '../../components/container';
-import { useQuery } from 'react-query';
-import { getCategoryList, getQuizList } from '../../api';
 import { useSnackbar } from 'notistack';
 import Loader from '../../components/loader/Loader';
 import { useApp } from '../../context/categoryContext';
@@ -39,7 +37,7 @@ const Category = () => {
 
   const handleCategoryDetails = useCallback((data: string) => {
     if (quizList) {
-      let filtercategory: cardvalue[] | undefined = quizList.response.filter((record: cardvalue) => record.category_id === parseInt(data))
+      let filtercategory: cardvalue[] | undefined = quizList.response.filter((record: any) => record.category_id === data)
       if (filtercategory && filtercategory.length > 0) {
         nevigate(`/category/${filtercategory[0].name}`)
       } else {

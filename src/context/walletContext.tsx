@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { getUserWallet } from '../api/index';
+import { useNavigate } from 'react-router-dom';
 
 type WallerContextType = {
     walletList: any;
@@ -17,23 +18,26 @@ export const WalletContext = createContext<WallerContextType>({
     walleterror: {},
     walletLoading: false,
     walletFetching: false,
-    walletFetch: () => {},
+    walletFetch: () => { },
 });
 
 // Create a provider for the context
 export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     const [walletList, setWalletList] = useState({})
-
+    const nevigate = useNavigate();
     const { data: wallet, isLoading: walletLoading, isFetching: walletFetching, refetch: walletFetch, error: walleterror } = useQuery(
         'get-user-balance',
         async () => await getUserWallet(),
         { enabled: false }
     );
-    
+
     useEffect
         (() => {
             if (wallet) {
-                setWalletList(wallet.data)
+                setWalletList(wallet)
+                if(wallet.status === 401){
+                    nevigate('/login')
+                }
             }
         }, [wallet])
 

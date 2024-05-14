@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { getCategoryList } from '../api/index';
+import { useNavigate } from 'react-router-dom';
 
 type AppContextType = {
     categoryList: any;
@@ -20,10 +21,9 @@ export const AppContext = createContext<AppContextType>({
     categoryFetch: () => { },
 });
 
-// Create a provider for the context
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [categoryList, setCategoryList] = useState({})
-
+    const nevigate = useNavigate();
     const { data: category, isLoading: categoryLoading, isFetching: categoryFetching, refetch: categoryFetch, error: categoryerror } = useQuery(
         'get-category-list',
         async () => await getCategoryList(),
@@ -34,6 +34,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         (() => {
             if (category) {
                 setCategoryList(category.data)
+                if (category.status === 401) {
+                    nevigate('/login')
+                }
             }
         }, [category])
 

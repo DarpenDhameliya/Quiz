@@ -7,7 +7,6 @@ import useResultStyles from "./Result";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { useWallet } from "../../context/walletContext";
-import Loader from "../../components/loader/Loader";
 import { getQuizAttempList } from "../../api";
 import CryptoJS from "crypto-js";
 
@@ -25,31 +24,32 @@ const ResultIndex = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const nevigate = useNavigate();
-  useEffect(() => {
-    const call = async () => {
-      const listView = await getQuizAttempList();
-      console.log(listView.data, "-0-0-------0-0-0");
-      const encryptedMessage =
-        "U2FsdGVkX1/M2QaRuG1z9OSEOWOlB1IXkxPpa6nRl6/Qd6FoJ0FzWIc6MK+HowKQdo4NQiFTykLxZdjXNlqaCA==";
 
-        const key = "3213213213213321";
-        const iv = CryptoJS.enc.Hex.parse("be410fea41df7162a679875ec131cf2c");
+  //for decod at front side for question
+  // useEffect(() => {
+  //   const call = async () => {
+  //     const listView = await getQuizAttempList();
+  //     const encryptedMessage =
+  //       "U2FsdGVkX1/M2QaRuG1z9OSEOWOlB1IXkxPpa6nRl6/Qd6FoJ0FzWIc6MK+HowKQdo4NQiFTykLxZdjXNlqaCA==";
+
+  //       const key = "3213213213213321";
+  //       const iv = CryptoJS.enc.Hex.parse("be410fea41df7162a679875ec131cf2c");
         
-        try {
-            var decrypted = CryptoJS.AES.decrypt(encryptedMessage, "3213213213213321", {
-                iv: iv,
-                mode: CryptoJS.mode.CBC,
-                padding: CryptoJS.pad.Pkcs7,
-              });
+  //       try {
+  //           var decrypted = CryptoJS.AES.decrypt(encryptedMessage, "3213213213213321", {
+  //               iv: iv,
+  //               mode: CryptoJS.mode.CBC,
+  //               padding: CryptoJS.pad.Pkcs7,
+  //             });
         
-          // Try interpreting decrypted bytes using different encodings
-          console.log("Decrypted (UTF-8): " + decrypted.toString(CryptoJS.enc.Utf8));
-        } catch (error) {
-          console.error("Decryption error:", error);
-        }
-    };
-    call();
-  }, []);
+  //         // Try interpreting decrypted bytes using different encodings
+  //         console.log("Decrypted (UTF-8): " + decrypted.toString(CryptoJS.enc.Utf8));
+  //       } catch (error) {
+  //         console.error("Decryption error:", error);
+  //       }
+  //   };
+  //   call();
+  // }, []);
   useEffect(() => {
     const data = sessionStorage.getItem("quizsdata");
     if (data) {
@@ -95,23 +95,15 @@ const ResultIndex = () => {
             />
           </div>
           <div className={`flex ${classes.profilemiddle}`}>
-            <button className={`${classes.joinexambtn} fs-15`}>
-              <span className="mb-1.5">{score}</span>
-              <span className="mt-1.5">Your Score</span>
-            </button>
-            <button className={`${classes.joinexambtngest} fs-15`}>
-              {userFind ? (
-                !walletFetching &&
-                !walletLoading &&
-                Object.keys(walletList).length !== 0 && (
-                  <span className="mb-1.5">{walletList.response.balance}</span>
-                )
-              ) : (
-                <span className="mb-1.5">{sessionStorage.getItem("coin")}</span>
-              )}
-              <span className="mt-1.5">Coin</span>
-            </button>
-          </div>
+                        <button className={`${classes.joinexambtn} fs-15`}>
+                            <span className="mb-1">{score}</span>
+                            <span className="mt-1">Your Score</span>
+                        </button>
+                        <button className={`${classes.joinexambtngest} fs-15`}>
+                            {userFind ? (!walletFetching && !walletLoading && Object.keys(walletList).length !== 0) && <span className="mb-1">{walletList.data.response.balance}</span> : <span className="mb-5">{sessionStorage.getItem('coin')}</span>}
+                            <span className="mt-1">Coin</span>
+                        </button>
+                    </div>
           <div className={`flex justify-center ${classes.resulthome}`}>
             <button
               className={`${classes.profilejoinbtn} fs-15`}

@@ -1,4 +1,4 @@
-import React, { lazy, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Container from "@mui/material/Container";
 import useQuizStyles from '../category/QuizStyle';
@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Button, Table, TableBody, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
-import { getCategoryList, postAddCategory, postAddQuiz, postDeleteCategory, postDeleteQuiz, postEditCategory, postEditQuiz } from '../../../api';
+import { postAddQuiz, postDeleteQuiz, postEditCategory, postEditQuiz } from '../../../api';
 import { useApp } from '../../../context/categoryContext';
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -20,6 +20,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import { useQuiz } from '../../../context/quizContext';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -35,7 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
     },
-    // hide last border
+
     "&:last-child td, &:last-child th": {
         border: 0,
     },
@@ -48,14 +49,14 @@ const Quiz = () => {
     const [entryFee, setEntryFee] = useState('')
     const [live, setLive] = useState(false)
     const [category_id, setCategory_id] = useState('')
-    const [encodeUrl, setEncodeUrl] = useState('')
     const [updateId, setUpdateId] = useState('')
     const classes = useQuizStyles()
-    const { categoryList, categoryFetch, categoryLoading, categoryFetching } = useApp();
+    const { categoryList, categoryFetch } = useApp();
     const { quizList, quizLoading, quizFetching, quizFetch, quizerror } = useQuiz();
 
     const [error, setError] = useState('')
     const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (Object.keys(categoryList).length === 0) {
@@ -64,7 +65,6 @@ const Quiz = () => {
         if (Object.keys(quizList).length === 0) {
             quizFetch();
         }
-        // console.log('Where was Elizabeth Blackwell born?' === 'Where was  Elizabeth Blackwell born?')
     }, [])
 
     const handlesenddata = async () => {
@@ -96,11 +96,13 @@ const Quiz = () => {
                     );
                     quizFetch();
                 } else {
-                    console.log(response, '-0=-0=0=-0=0')
                     enqueueSnackbar(
                         response?.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
+                    if (response.status === 401) {
+                        navigate('/login')
+                    }
                 }
             }
         } else {
@@ -128,6 +130,9 @@ const Quiz = () => {
                         response?.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
+                    if (response.status === 401) {
+                        navigate('/login')
+                    }
                 }
             }
         }
@@ -164,6 +169,9 @@ const Quiz = () => {
                 response?.data.error,
                 { variant: 'error', autoHideDuration: 2000 },
             );
+            if (response.status === 401) {
+                navigate('/login')
+            }
         }
     }
 
@@ -216,7 +224,6 @@ const Quiz = () => {
                             <FormControlLabel style={{ width: 'fit-content' }} control={<Checkbox checked={live} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLive(e.target.checked)} />} label="Live" />
 
                             {error && <span>{error}</span>}
-                            {encodeUrl && <img src={encodeUrl} alt='logo' style={{ maxWidth: '340px', maxHeight: "300px" }} />}
                             <div className={classes.setsendbutton}>
                                 {updateId ?
                                     <>

@@ -55,7 +55,7 @@ const Profile = () => {
                                 </h3>
                             </div>
                             <div className={`${classes.usercoinbtn} `} >
-                                Coins <span className="ml-1.5">{(!walletFetching && !walletLoading && Object.keys(walletList).length !== 0) && walletList.response.balance}</span>
+                                Coins <span className="ml-5">{(!walletFetching && !walletLoading && Object.keys(walletList).length !== 0 && walletList.data.status === 'ok') && walletList.data.response.balance}</span>
                             </div>
                             <button className={`${classes.userlogout} fs-15`} onClick={logoutuser}>
                                 Logout
@@ -72,10 +72,10 @@ const Profile = () => {
                             </div>
                             <div className={`flex ${classes.profilemiddle}`}>
                                 <button className={`${classes.joinexambtn} fs-15`}>
-                                    Coins <span className="ml-1.5">{sessionStorage.getItem('coin')}</span>
+                                    Coins <span className="ml-5">{sessionStorage.getItem('coin')}</span>
                                 </button>
                                 <button className={`${classes.joinexambtngest} fs-15`}>
-                                    Quize Playd <span className="ml-1.5">{quizPlayed}</span>
+                                    Quize Playd <span className="ml-5">{quizPlayed}</span>
                                 </button>
                             </div>
                             <div className="flex justify-center">

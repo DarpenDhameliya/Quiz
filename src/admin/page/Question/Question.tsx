@@ -1,4 +1,4 @@
-import React, { lazy, useCallback, useEffect, useMemo, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import useQuizStyles from "../category/QuizStyle";
@@ -21,14 +21,10 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import {
   getAllQuestionList,
-  getCategoryList,
   getFilteredQuestionList,
-  postAddCategory,
   postAddQuestionexcel,
-  postDeleteCategory,
-  postEditCategory,
 } from "../../../api";
-import { useQuery } from "react-query";
+
 import { useApp } from "../../../context/categoryContext";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -66,7 +62,6 @@ interface Question {
   question: string;
   correct: boolean; // Assuming correct is a boolean, change to appropriate type if needed
   quiz_id: number;
-  // Add other properties if there are any
 }
 const Question = () => {
   const [image, setImage] = useState<File | null>(null);

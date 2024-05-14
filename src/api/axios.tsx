@@ -19,12 +19,5 @@ axiosInstance.interceptors.request.use((configs: any) => {
         },
     };
 });
-// axiosInstance.interceptors.request.use((config: any) => {
-//     const token = getToken();
-//     if (token) {
-//         config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-// });
 
 export { axiosInstance as request };

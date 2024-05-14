@@ -25,14 +25,18 @@ export async function postAdLogin(auth: {
 }
 
 export async function getCategoryList() {
-  return await request.get("/categories/list");
+  try {
+    return await request.get('/categories/list');
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getCategory(id: any) {
   try {
     return await request.get(`/categories/editcategorylist/${id}`);
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    return error.response
   }
 }
 
@@ -60,25 +64,27 @@ export async function postDeleteCategory(id: any) {
   }
 }
 
-export async function postOtpLogin(number: string) {
-  let mobileNumber = { mobileNumber: number };
-  return await request.post(`/user/otp_registration`, mobileNumber);
-}
-
 export async function postUpdateUserWallet(amount: number, type: string) {
-  let walletAmount = { wallet: amount, type };
-  return await request.post(`/user/updateuserwallet`, walletAmount);
+  try {
+    return await request.post(`/user/updateuserwallet`, { wallet: amount, type });
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getUserWallet() {
-  return await request.get("/user/wallet");
+  try {
+    return await request.get('/user/wallet');
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getQuizList() {
   try {
     return await request.get("/quiz/list");
   } catch (error: any) {
-    console.log(error.response);
+    return error.response
   }
 }
 
@@ -90,22 +96,30 @@ export async function postAddQuiz(data: any) {
   }
 }
 
-export async function getQuiz(id: any) {
-  return request.get(`/quiz/editquizlist/${id}`);
-}
 export async function postEditQuiz(id: any, data: any) {
-  return request.post(`/quiz/editquiz/${id}`, data);
+  try {
+    const response = await request.post(`/quiz/editquiz/${id}`, data);
+    return response;
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function postDeleteQuiz(id: any) {
-  return request.post(`/quiz/removequiz/${id}`);
+  try {
+    const response = await request.post(`/quiz/removequiz/${id}`);
+    return response
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getQuestionList(quizeId: string | undefined) {
   try {
-    return await request.get(`/question/list/${quizeId}`);
-  } catch (error) {
-    console.log(error);
+    const response = await request.get(`/question/list/${quizeId}`);
+    return response
+  } catch (error: any) {
+    return error.response
   }
 }
 
@@ -133,18 +147,35 @@ export async function postAddQuestionexcel(data: any) {
   }
 }
 export async function postAddQuestion(data: any) {
-  return request.post("/question/addquestion", data);
+  try {
+    return await request.post('/question/addquestion', data);
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getQuestion(id: any) {
-  return request.get(`/question/editquestionlist/${id}`);
+  try {
+    return await request.get(`/question/editquestionlist/${id}`);
+  } catch (error: any) {
+    return error.response
+  }
 }
+
 export async function postEditQuestion(id: any, data: any) {
-  return request.post(`/question/editquestion/${id}`, data);
+  try {
+    return request.post(`/question/editquestion/${id}`, data);
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function postDeleteQuestion(id: any) {
-  return request.post(`/question/removequestion/${id}`);
+  try {
+    return request.post(`/question/removequestion/${id}`);
+  } catch (error: any) {
+    return error.response
+  }
 }
 
 export async function getQuizAttempList() {
