@@ -16,17 +16,17 @@ const getAllCategoryData = async (req, res) => {
                 image: `${baseUrl}/category/` + data.image
             };
         })
-        // return res.status(400).json(errormessage('error'));
-
         return res.status(200).json(successmessage(returndata));
     } catch (error) {
-        console.error("Error get category:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const postAddCategory = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const dbData = {
             name: req.body.name,
             image: req.file.filename,
@@ -51,6 +51,10 @@ const getCategory = async (req, res) => {
 
 const postEditCategory = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
+
         const name = req.body.name
         const getrecord = await selectSpecificCategoryData(req.params.id);
 
@@ -76,7 +80,6 @@ const postEditCategory = async (req, res) => {
             } else {
                 dbData.image = getrecord.image;
             }
-            // console.log(dbData)
             try {
                 await editCategory(dbData);
                 return res.status(200).json(successmessage('Update Sucessfully'));
@@ -87,18 +90,18 @@ const postEditCategory = async (req, res) => {
             return res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const postDeleteCategory = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
+
         const getrecord = await selectSpecificCategoryData(req.params.id);
         if (getrecord) {
-            // console.log('getrecord', getrecord)
-            // const getrecords = await selectSpecificQuizeDatafromCategory(req.params.id);
-            // console.log(getrecords)
             if (getrecord.image) {
                 let fileName = getrecord.image;
                 var filepath = "files/category";
@@ -120,7 +123,6 @@ const postDeleteCategory = async (req, res) => {
             return res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
         return res.status(500).json(errormessage(error.message));
     }
 };

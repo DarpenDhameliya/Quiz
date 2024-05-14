@@ -5,6 +5,7 @@ const selectQuizeData = async () => {
     const selectCategoryData = `
     SELECT 
     quiz.id,
+    quiz.title,
     category.id AS category_id,
     category.name,
     category.image,
@@ -19,8 +20,19 @@ const selectQuizeData = async () => {
 };
 
 const selectSpecificQuizeData = async (id) => {
-    const selectategoryData = `SELECT * FROM quiz WHERE id = ?`;
-    const result = await queryPromise(selectategoryData, id);
+    const selectCategoryData = `
+    SELECT 
+    quiz.id,
+    quiz.title,
+    category.id AS category_id,
+    category.name AS category_name,
+    quiz.totalPrice,
+    quiz.entryFee,
+    quiz.live
+    FROM quiz
+    LEFT JOIN category ON quiz.category_id = category.id
+    WHERE quiz.id = ?`;
+    const result = await queryPromise(selectCategoryData, id);
     return result;
 };
 

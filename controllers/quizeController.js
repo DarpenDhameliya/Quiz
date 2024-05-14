@@ -2,7 +2,6 @@ const { successmessage, errormessage } = require("../response/response");
 const path = require("path");
 const fs = require("fs");
 const { selectQuizeData, selectSpecificQuizeData, addQuiz, deletQuiz, editQuiz } = require('../db/quize');
-const Authenticate = require("../middleware/authMiddleware");
 
 const getAllQuizeData = async (req, res) => {
     try {
@@ -15,16 +14,26 @@ const getAllQuizeData = async (req, res) => {
             };
         })
         return res.status(200).json(successmessage(returndata));
-        // return res.status(400).json(errormessage('message'));
-
     } catch (error) {
         console.error("Error get quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
+    }
+};
+
+const getQuizDetailsForQuestion = async (req, res) => {
+    try {
+        const response = await selectSpecificQuizeData(req.params.id);
+        return res.status(200).json(successmessage(response));
+    } catch (error) {
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const postAddQuiz = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const dbData = {
             title: req.body.title,
             totalPrice: req.body.totalPrice,
@@ -35,21 +44,10 @@ const postAddQuiz = async (req, res) => {
         const response = await addQuiz(dbData);
         return res.status(200).json(successmessage("Create successfully"));
     } catch (error) {
-        console.error("Error add quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
-const getQuize = async (req, res) => {
-    try {
-        const response = await selectSpecificQuizeData(req.params.id);
-        // console.log(response)
-        return res.status(200).json(successmessage(response));
-    } catch (error) {
-        console.error("Error add category:", error);
-        return res.status(400).json(errormessage(error.message));
-    }
-};
 
 const postEditQuiz = async (req, res) => {
     try {
@@ -74,8 +72,7 @@ const postEditQuiz = async (req, res) => {
             res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
-        res.status(400).json(errormessage(error.message));
+        res.status(500).json(errormessage(error.message));
     }
 };
 
@@ -93,7 +90,6 @@ const postDeleteQuiz = async (req, res) => {
             res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
         res.status(500).json(errormessage(error.message));
     }
 };
@@ -101,7 +97,7 @@ const postDeleteQuiz = async (req, res) => {
 module.exports = {
     getAllQuizeData,
     postAddQuiz,
-    getQuize,
     postEditQuiz,
-    postDeleteQuiz
+    postDeleteQuiz,
+    getQuizDetailsForQuestion
 };

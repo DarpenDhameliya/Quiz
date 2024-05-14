@@ -18,13 +18,15 @@ const getAllQuestionData = async (req, res) => {
         })
         return res.status(200).json(successmessage(returndata));
     } catch (error) {
-        console.error("Error get quize:", error);
         return res.status(400).json(errormessage(error.message));
     }
 };
 
 const getFilteredData = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const perPage = 50
         const pageNumber = req.query.page
         const skip = (pageNumber - 1) * perPage;
@@ -33,14 +35,15 @@ const getFilteredData = async (req, res) => {
         const response = await getFielteredData(req.query.data, req.params.byQuiz, perPage, skip);
         return res.status(200).json(successmessage({data: response,perPage, totalPage: Math.ceil(totalRecords / perPage)}));
     } catch (error) {
-        console.error("Error get quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const getAllQuestionDataForAdmin = async (req, res) => {
     try {
-
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const response = await selectAllQuestionData();
         const returndata = response.map((data) => {
             return {
@@ -50,44 +53,47 @@ const getAllQuestionDataForAdmin = async (req, res) => {
         })
         return res.status(200).json(successmessage(returndata));
     } catch (error) {
-        // console.error("Error get quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const postAddExcelQuestion = async (req, res) => {
     try {
-        // console.log(req.body, req.file, req.file.path)
         const path = req.file.path
         const workbook = xlsx.readFile(path);
-
-        // Assume CSV data is in the first sheet (usually "Sheet1")
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
 
-        // Parse the CSV data
         const data = xlsx.utils.sheet_to_json(worksheet);
 
         const values = data.map(item => [
             item.question.trim().replace(/'/g, "''"),
             item.answer.replace(/'/g, "''"),
-            item.correct.replace(/'/g, "''"),
+            item.correct,
             item.time,
             item.coins,
             item.quiz_id
         ]);
         const response = await addQuestionCsv(values);
-        console.log(response)
         return res.status(200).json(successmessage("Create successfully"));
     } catch (error) {
-        console.error("Error add quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        if (req.file) {
+            fs.unlink(req.file.path, (err) => {
+                if (err) {
+                    console.error("Error deleting file:", err);
+                }
+            });
+        }
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 
 const postAddQuestion = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const dbData = {
             question: req.body.question,
             answer: JSON.stringify(req.body.answer),
@@ -96,17 +102,18 @@ const postAddQuestion = async (req, res) => {
             coins: req.body.coins
         }
         const response = await addQuestion(dbData);
-        return res.status(200).json(successmessage("Create successfully"));
+        return res.status(200).json(successmessage("Add successfully"));
     } catch (error) {
-        console.error("Error add quize:", error);
-        return res.status(400).json(errormessage(error.message));
+        return res.status(500).json(errormessage(error.message));
     }
 };
 
 const getQuestion = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
         const response = await selectSpecificQuestionData(req.params.id);
-        // console.log(response)
         return res.status(200).json(successmessage(response));
     } catch (error) {
         console.error("Error add category:", error);
@@ -116,6 +123,10 @@ const getQuestion = async (req, res) => {
 
 const postEditQuestion = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
+
         const { question, answer, correct, quizId, coins } = req.body
         const getrecord = await selectSpecificQuestionData(req.params.id);
         if (getrecord) {
@@ -137,13 +148,16 @@ const postEditQuestion = async (req, res) => {
             res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
-        res.status(400).json(errormessage(error.message));
+        res.status(500).json(errormessage(error.message));
     }
 };
 
 const postDeleteQuestion = async (req, res) => {
     try {
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
+
         const getrecord = await selectSpecificQuestionData(req.params.id);
         if (getrecord) {
             try {
@@ -156,7 +170,6 @@ const postDeleteQuestion = async (req, res) => {
             res.status(402).json(errormessage("Data Not Found"));
         }
     } catch (error) {
-        console.error("Error add category:", error);
         res.status(500).json(errormessage(error.message));
     }
 };

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const { findUser, googleLogin, findUserByMobileNumber, otpLogin, findUserById, updateUserWallet } = require("../db/auth");
+const { findUser, googleLogin, findUserById, updateUserWallet } = require("../db/auth");
 const { errormessage, successmessage } = require("../response/response");
 const JWT_SECRET = "skyline";
 const bcrypt = require("bcrypt");
@@ -83,6 +83,9 @@ const Login = async (req, res) => {
       if (signup && findUserData.length > 0) {
         return res.status(402).json(errormessage('user Exist'));
       }
+      if (signup === false && findUserData.length === 0) {
+        return res.status(402).json(errormessage('user Not Exist'));
+      }
       if (findUserData.length === 0) {
         const salt = await bcrypt.genSalt(10);
         const encyptpassword = await bcrypt.hash(password, salt);
@@ -126,7 +129,6 @@ const Login = async (req, res) => {
       return res.status(402).json(errormessage('Fields required'));
     }
   } catch (error) {
-    console.log(error)
     return res.status(500).json(errormessage(error.message));
   }
 }
@@ -134,11 +136,9 @@ const Login = async (req, res) => {
 const getUserWallet = async (req, res) => {
   try {
     const userWallet = await findUserById(req.user);
-    const balance = userWallet.length > 0 ? userWallet[0] : 0
     return res.status(200).json(successmessage(userWallet[0]));
   } catch (error) {
-    console.error("Error get quize:", error);
-    return res.status(400).json(errormessage(error.message));
+    return res.status(500).json(errormessage(error.message));
   }
 };
 
@@ -155,7 +155,6 @@ const postUpdateUserWallet = async (req, res) => {
     }
     const data = { blance: updatedBalance, id: req.user }
     const response = await updateUserWallet(data);
-    // console.log(response)
     return res.status(200).json(successmessage('Wallet Update Successfully'));
   } catch (error) {
     console.error("Error get quize:", error);

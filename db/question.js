@@ -85,7 +85,7 @@ const getFielteredData = async (searchData, searchByQuizId, pageNumber, skip) =>
         SELECT * 
         FROM questions 
         WHERE question LIKE '%${searchData}%' 
-        ORDER BY created_at ASC 
+        ORDER BY created_at ASC
         LIMIT ${pageNumber} OFFSET ${skip}`;
     }
 
@@ -127,7 +127,6 @@ const editQuestion = async (id, category) => {
 
     updateQuery += ` WHERE id = ?`;
     updateValues.push(id);
-    console.log(updateQuery, updateValues)
     const result = await queryPromise(updateQuery, updateValues);
     return result;
 };
