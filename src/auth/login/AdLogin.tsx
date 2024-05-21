@@ -93,7 +93,7 @@ const AdLogin = () => {
                     <Typography variant="h5" className={classes.signupheading} gutterBottom>
                         Join for Quize
                     </Typography>
-                    <div className='flex flex-column'>
+                    <div className='d-flex flex-column'>
                         <div id="sign-in-button" />
                         <TextField id="outlined-basic" size="small" type="email" className={`mt-10`} onChange={(e) => setEmail(e.target.value)} placeholder="Email" variant="outlined" InputProps={{ sx: { borderRadius: 5, mt: 1, border: "1px solid var(--whitebglight-color)", color: 'var(--text-color)' } }} />
                         {error.email && <span style={{ color: 'var(--danger-color)' }}>{error.email}</span>}
@@ -105,9 +105,9 @@ const AdLogin = () => {
                             <button className={`${classes.joinexambtn} fs-15`} onClick={() => login()}>Login</button>
                         }
 
-                        <div className='flex justify-end d-none'>
+                        <div className='d-flex justify-end d-none'>
                             {signupShow ?
-                                <button className={`${classes.signupinq} flex align-center`} onClick={() => SigninCall()}>
+                                <button className={`${classes.signupinq} d-flex align-center`} onClick={() => SigninCall()}>
                                     Sign In
                                 </button>
                                 :

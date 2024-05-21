@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import usecategoryStyles from "../category/Category";
 import { FcBusinessman } from "react-icons/fc";
-import WorkSpace from "../../components/container";
 import adsImg from "../../asset/logo/add.jpg";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../../context/walletContext";
@@ -14,7 +13,7 @@ const Profile = () => {
     const [quizPlayed, setQuizPlayed] = useState(0)
     const nevigate = useNavigate();
     const userfind = localStorage.getItem('token')
-    const { walletList, walletFetching, walletLoading } = useWallet();
+    const { walletList, walleterror, walletFetching, walletLoading, walletFetch } = useWallet();
 
     useEffect(() => {
         let sessionData = sessionStorage.getItem('quiz')
@@ -22,13 +21,14 @@ const Profile = () => {
             let sessionParseData = JSON.parse(sessionData)
             setQuizPlayed(sessionParseData.length)
         }
+
     }, [])
 
-    const callLoginCom = useCallback(() => {
+    const callLoginCom = () => {
         nevigate('/login')
-    }, [nevigate])
+    }
 
-    const logoutuser = useCallback(() => {
+    const logoutuser = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('email')
         localStorage.removeItem('type')
@@ -38,15 +38,14 @@ const Profile = () => {
         } else {
             nevigate("/")
         }
-    }, [])
+    }
 
     return (
-        <WorkSpace>
             <Paper className={classes.setProductpape} elevation={5}>
                 <Header />
                 <div className={classes.loginscroll}>
                     {userfind ?
-                        <div className={`flex ${classes.profilemiddle} flex-column`}>
+                        <div className={`d-flex ${classes.profilemiddle} flex-column`}>
                             <div>
                                 <h3 className={`${classes.profileuser}  ${classes.proileFont}`}>User :
                                     <span style={{ marginLeft: "10px" }}>
@@ -70,7 +69,7 @@ const Profile = () => {
                                     </h2>
                                 </div>
                             </div>
-                            <div className={`flex ${classes.profilemiddle}`}>
+                            <div className={`d-flex ${classes.profilemiddle}`}>
                                 <button className={`${classes.joinexambtn} fs-15`}>
                                     Coins <span className="ml-5">{sessionStorage.getItem('coin')}</span>
                                 </button>
@@ -78,7 +77,7 @@ const Profile = () => {
                                     Quize Playd <span className="ml-5">{quizPlayed}</span>
                                 </button>
                             </div>
-                            <div className="flex justify-center">
+                            <div className="d-flex justify-center">
                                 <button className={`${classes.profilejoinbtn} fs-15`} onClick={callLoginCom}>
                                     Join Now
                                 </button>
@@ -86,7 +85,7 @@ const Profile = () => {
                         </>
                     }
                     <div
-                        className="flex justify-center ads-box"
+                        className="d-flex justify-center ads-box"
                         style={{ marginTop: 20 }}
                     >
                         <img
@@ -101,7 +100,6 @@ const Profile = () => {
                 </div>
                 <Footer />
             </Paper>
-        </WorkSpace>
     );
 };
 

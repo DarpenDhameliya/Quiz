@@ -1,9 +1,8 @@
-import React from 'react';
 import './Loader.css'; // Import the CSS file
 
 function Loader() {
   return (
-    <div className='flex justify-center w-full'>
+    <div className='d-flex justify-center w-full items-center'>
       <svg height="108px" width="108px" viewBox="0 0 128 128" className="loader">
         <defs>
           <clipPath id="loader-eyes">

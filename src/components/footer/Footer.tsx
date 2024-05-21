@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
     return (
         <>
             <div className={classes.mainFooter}>
-                <div className={`flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/category') && classes.selcetdFooter}`} onClick={() => handlenevigate('category')} >
+                <div className={`d-flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/category') && classes.selcetdFooter}`} onClick={() => handlenevigate('category')} >
                     {getLocation && getLocation === '/category' ?
                         <BiSolidGridAlt className='fs-15 color-white' />
                         :
@@ -34,11 +34,11 @@ const Footer: React.FC = () => {
                     }
                     <Typography className={classes.footerText} >Category</Typography>
                 </div>
-                <div className={`flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/home') && classes.selcetdFooter}`} onClick={() => handlenevigate('home')} >
+                <div className={`d-flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/home') && classes.selcetdFooter}`} onClick={() => handlenevigate('home')} >
                     {getLocation && getLocation === '/home' ? <BsHouseDoorFill className='fs-15 color-white' /> : <BsHouseDoor className='fs-15 color-white' />}
                     <Typography className={classes.footerText} >Home</Typography>
                 </div>
-                <div className={`flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/profile') && classes.selcetdFooter}`} onClick={() => handlenevigate('profile')}>
+                <div className={`d-flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/profile') && classes.selcetdFooter}`} onClick={() => handlenevigate('profile')}>
                     {getLocation && getLocation === '/profile' ? <BiSolidUser className='fs-15 color-white' /> : <BiUser className='fs-15 color-white' />}
                     <Typography className={classes.footerText} >Profile</Typography>
                 </div>

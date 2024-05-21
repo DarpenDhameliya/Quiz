@@ -12,6 +12,14 @@ import { useQuiz } from '../../context/quizContext';
 import { getQuestionList } from '../../api';
 import { useSnackbar } from 'notistack';
 
+// interface Question {
+//     _id: string;
+//     question: string;
+//     answer: string[];
+//     correct: string;
+//     time: string;
+//     coins: string;
+// }
 interface Question {
     id: string;
     question: string;
@@ -66,14 +74,14 @@ const SignUp: React.FC = () => {
     const getAnsuser = (ans: string, index: number) => {
         if (ans === questinsList?.correct) {
             setCorrectAns(index)
-            setWinAmount((amount) => amount + 50)
+            setWinAmount((amount) => amount + 75)
         } else {
             const correctAnsIndex: number | undefined | null = questinsList?.answer.findIndex(
                 (answer) => answer === questinsList?.correct
             );
             setCorrectAns(correctAnsIndex)
             setWrongans(index)
-            setWinAmount((amount) => amount - 25)
+            setWinAmount((amount) => amount - 30)
         }
         setTimeout(() => {
             setWrongans(null)
@@ -118,15 +126,15 @@ const SignUp: React.FC = () => {
         <>
             <Paper className={classes.setProductpape} elevation={5}>
                 <div className={classes.loginscrollSignup}>
-                    <div className='flex justify-center ads-box'>
+                    <div className='d-flex justify-center ads-box' style={{ height: "280px" }}>
                         <img src={ad} alt='ad' style={{
                             width: '100%',
-                            maxHeight: '300px',
+                            maxHeight: '320px',
                             borderRadius: "15px"
                         }} />
                         {/* <AdsComponent dataAdSlot="4641163913" /> */}
                     </div>
-                    <Typography variant="h5" className={` fs-12 flex flex-column text-center ${classes.signupheadingview1}`} style={{ marginTop: "15px" }} gutterBottom>
+                    <Typography variant="h5" className={` fs-12 d-flex flex-column text-center ${classes.signupheadingview1}`} style={{ marginTop: "15px" }} gutterBottom>
                         <span className='fs-15 ff-Roman'>
                             Let's begin!
                         </span>
@@ -138,7 +146,7 @@ const SignUp: React.FC = () => {
                     </Typography>
                     {QuestionView()}
                     <ul className={`ff-Roman ${classes.view3joinexamterms}`} >
-                        <span className='flex justify-center' style={{ fontWeight: 500, fontSize: "17px", color: "var(--text-color)", marginBottom: "10px" }}>Play Quiz and Win Coins!</span>
+                        <span className='d-flex justify-center' style={{ fontWeight: 500, fontSize: "17px", color: "var(--text-color)", marginBottom: "10px" }}>Play Quiz and Win Coins!</span>
                         <li className={classes.view3li}>Play Quizzes in 25+ categories like GK, Sports, Bollywood, Business, Cricket & more!</li>
                         <li className={classes.view3li}>Compete with lakhs of other players!</li>
                         <li className={classes.view3li}>Win coins for every game</li>

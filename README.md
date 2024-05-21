@@ -46,9 +46,5 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 
-create migration
-node migration.js add migration migration_name
-
-for apply migration
-node migration.js run filename.js up
-filename is like -- 1714798101594_create_table_examtaken
+for create migrate:  node migration.js add migration table_name
+for run migrate: node migration.js run filename.js up/down

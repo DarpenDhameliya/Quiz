@@ -4,9 +4,9 @@ import WorkSpace from '../../components/container'
 
 const SignupIndex = () => {
     return (
-        <WorkSpace>
+        // <WorkSpace>
             <SignUp />
-        </WorkSpace>
+        // </WorkSpace>
     )
 }
 

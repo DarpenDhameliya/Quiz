@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WorkSpace from '../../components/container';
 import Footer from '../../components/footer/Footer';
@@ -11,13 +11,10 @@ import Header from '../../components/header/Header';
 import useStyles from '../AuthStyle';
 import { postLogin } from '../../api';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import google from '../../asset/logo/googlelogo.png';
-import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 
 interface ErrorState {
     password?: string;
@@ -33,7 +30,6 @@ const Login = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [error, setError] = useState({} as ErrorState)
     const [showPassword, setShowPassword] = React.useState(false);
-    const [user, setUser] = useState<string | null>(null);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const classes: any = useStyles();
@@ -52,34 +48,6 @@ const Login = () => {
     const SigninCall = () => {
         setSignupShow(false)
     };
-
-    const googleLogin = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse.access_token),
-        onError: (error) => console.log('Login Failed:', error)
-    });
-
-    useEffect(() => {
-        if (user) {
-          axios.get(
-            'http://localhost:8000/api/user/google_registration',
-            {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': user
-              }
-            }
-          ).then((response: any) => {
-            console.log('response.data', response.data);
-            localStorage.setItem('email', response.data.response.email)
-            localStorage.setItem('token', response.data.response.token)
-            nevigate('/home')
-            setUser('')
-          }).catch((error: any) => {
-            console.error('Error fetching data: ', error);
-          })
-        }
-      }, [user]);
 
     const login = async () => {
         const emailVerify = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)
@@ -125,7 +93,6 @@ const Login = () => {
                 }
                 nevigate('/home')
             } else {
-                console.log(responce.data)
                 enqueueSnackbar(
                     responce.data.error,
                     { variant: 'error' },
@@ -138,9 +105,9 @@ const Login = () => {
         event.preventDefault();
     };
 
-    const dashboard = useCallback(() => {
+    const homeCall = () => {
         nevigate('/home')
-    },[nevigate])
+    }
 
     return (
         <WorkSpace>
@@ -150,7 +117,7 @@ const Login = () => {
                     <Typography variant="h5" className={classes.signupheading} gutterBottom>
                         Join for Quize
                     </Typography>
-                    <div className='flex flex-column'>
+                    <div className='d-flex flex-column'>
                         <div id="sign-in-button" />
                         <TextField id="outlined-basic" size="small" type="email" className={`mt-10`} onChange={(e) => setEmail(e.target.value)} placeholder="Email" variant="outlined" InputProps={{ sx: { borderRadius: 5, mt: 1, border: "1px solid var(--whitebglight-color)", color: 'var(--text-color)' } }} />
                         {error.email && <span style={{ color: 'var(--danger-color)' }}>{error.email}</span>}
@@ -168,7 +135,7 @@ const Login = () => {
                                         onMouseDown={handleMouseDownPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOffIcon style={{ color: 'var(--text-color)', fontSize: "18px" }} /> : <VisibilityIcon style={{ color: 'var(--text-color)', fontSize: "18px" }} />}
+                                        {showPassword ? <FaEyeSlash style={{ color: 'var(--text-color)', fontSize: "18px" }} /> : <FaEye style={{ color: 'var(--text-color)', fontSize: "17px" }} />}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -182,26 +149,20 @@ const Login = () => {
                             :
                             <button className={`${classes.joinexambtn} fs-15`} onClick={() => login()}>Login</button>
                         }
-                        <div className='flex justify-center '>
-                            <button className={`${classes.profilejoinbtn} fs-15 flex align-center`} onClick={() => googleLogin()}>
-                                <img src={google} alt='google logo' style={{ width: "30px", paddingRight: "10px" }} />
-                                Sign Up with Google
-                            </button>
-                        </div>
 
-                        <div className='flex justify-end '>
+                        <div className='d-flex justify-end '>
                             {signupShow ?
-                                <button className={`${classes.signupinq} flex align-center`} onClick={() => SigninCall()}>
+                                <button className={`${classes.signupinq} d-flex align-center`} onClick={() => SigninCall()}>
                                     Sign In
                                 </button>
                                 :
-                                <button className={`${classes.signupinq} flex align-center`} onClick={() => SignupCall()}>
+                                <button className={`${classes.signupinq} d-flex align-center`} onClick={() => SignupCall()}>
                                     don't have account? Sign Up
                                 </button>
                             }
                         </div>
-                        <div className={`flex justify-center ${classes.resulthome}`}>
-                            <button className={`${classes.homeBtn} fs-15`} onClick={dashboard}>
+                        <div className={`d-flex justify-center ${classes.resulthome}`}>
+                            <button className={`${classes.homeBtn} fs-15`} onClick={homeCall}>
                                 Home
                             </button>
                         </div>

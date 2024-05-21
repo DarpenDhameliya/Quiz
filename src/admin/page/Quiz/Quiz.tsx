@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Button, Table, TableBody, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
-import { postAddQuiz, postDeleteQuiz, postEditCategory, postEditQuiz } from '../../../api';
+import { getCategoryList, postAddCategory, postAddQuiz, postDeleteQuiz, postEditCategory, postEditQuiz } from '../../../api';
 import { useApp } from '../../../context/categoryContext';
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -21,6 +21,7 @@ import { useQuiz } from '../../../context/quizContext';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../../components/loader/Loader';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -36,7 +37,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
     },
-
+    // hide last border
     "&:last-child td, &:last-child th": {
         border: 0,
     },
@@ -49,9 +50,10 @@ const Quiz = () => {
     const [entryFee, setEntryFee] = useState('')
     const [live, setLive] = useState(false)
     const [category_id, setCategory_id] = useState('')
+    const [encodeUrl, setEncodeUrl] = useState('')
     const [updateId, setUpdateId] = useState('')
     const classes = useQuizStyles()
-    const { categoryList, categoryFetch } = useApp();
+    const { categoryList, categoryFetch, categoryLoading, categoryFetching } = useApp();
     const { quizList, quizLoading, quizFetching, quizFetch, quizerror } = useQuiz();
 
     const [error, setError] = useState('')
@@ -97,7 +99,7 @@ const Quiz = () => {
                     quizFetch();
                 } else {
                     enqueueSnackbar(
-                        response?.data.error,
+                        response.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
                     if (response.status === 401) {
@@ -127,7 +129,7 @@ const Quiz = () => {
                     quizFetch();
                 } else {
                     enqueueSnackbar(
-                        response?.data.error,
+                        response.data.error,
                         { variant: 'error', autoHideDuration: 2000 },
                     );
                     if (response.status === 401) {
@@ -166,13 +168,17 @@ const Quiz = () => {
             quizFetch();
         } else {
             enqueueSnackbar(
-                response?.data.error,
+                response.data.error,
                 { variant: 'error', autoHideDuration: 2000 },
             );
             if (response.status === 401) {
                 navigate('/login')
             }
         }
+    }
+
+    if (quizFetching || quizLoading) {
+        return <Loader />
     }
 
     return (
@@ -230,12 +236,12 @@ const Quiz = () => {
                                         <Button variant="contained" size="medium" className={classes.calclebtn} onClick={handleClearData}>
                                             cancle
                                         </Button>
-                                        <Button variant="contained" size="medium" className={`ml-5 ${classes.setsendbtninside}`} onClick={handlesenddata}>
+                                        <Button variant="contained" sx={{ bgcolor: '#6c757d ' }} size="medium" className={`ml-5 ${classes.setsendbtninside}`} onClick={handlesenddata}>
                                             Update
                                         </Button>
                                     </>
                                     :
-                                    <Button variant="contained" size="medium" className={classes.setsendbtninside} onClick={handlesenddata}>
+                                    <Button variant="contained" sx={{ bgcolor: '#6c757d ' }} size="medium" className={classes.setsendbtninside} onClick={handlesenddata}>
                                         Add
                                     </Button>
                                 }
@@ -252,6 +258,9 @@ const Quiz = () => {
                                         <TableRow>
                                             <TableCell align="center" className={classes.tableth}>
                                                 No.
+                                            </TableCell>
+                                            <TableCell align="center" className={classes.tableth}>
+                                                Quiz ID
                                             </TableCell>
                                             <TableCell align="center" className={classes.tableth}>
                                                 Name
@@ -280,8 +289,11 @@ const Quiz = () => {
                                                     <StyledTableCell align="center" component="th" scope="row" className={classes.tabletd}>
                                                         {index + 1}
                                                     </StyledTableCell>
+                                                    <StyledTableCell align="center" component="th" scope="row" className={classes.tabletd}>
+                                                        {e.id}
+                                                    </StyledTableCell>
                                                     <StyledTableCell className={classes.tabletd} align="center">
-                                                        {e.name}
+                                                        {e.title}
                                                     </StyledTableCell>
                                                     {/* <StyledTableCell className={classes.tabletd} align="center">
                                                         {categoryList.response.map((data:any) => {

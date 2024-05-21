@@ -1,26 +1,18 @@
 import { request } from "./axios";
 
-export async function postLogin(auth: {
-  email: string;
-  password: string;
-  conPassword?: string;
-}) {
+export async function postLogin(auth: { email: string, password: string, conPassword?: string }) {
   try {
     return await request.post(`/user/auth`, auth);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
 
-export async function postAdLogin(auth: {
-  email: string;
-  password: string;
-  conPassword?: string;
-}) {
+export async function postAdLogin(auth: { email: string, password: string, conPassword?: string }) {
   try {
     return await request.post(`/user/ad-auth`, auth);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
 
@@ -42,9 +34,9 @@ export async function getCategory(id: any) {
 
 export async function postAddCategory(data: any) {
   try {
-    return await request.post("/categories/addcategory", data);
+    return await request.post('/categories/addcategory', data);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
 
@@ -52,7 +44,7 @@ export async function postEditCategory(id: any, data: any) {
   try {
     return await request.post(`/categories/editcategory/${id}`, data);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
 
@@ -60,9 +52,10 @@ export async function postDeleteCategory(id: any) {
   try {
     return await request.post(`/categories/removecategory/${id}`);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
+
 
 export async function postUpdateUserWallet(amount: number, type: string) {
   try {
@@ -77,12 +70,13 @@ export async function getUserWallet() {
     return await request.get('/user/wallet');
   } catch (error: any) {
     return error.response
+
   }
 }
 
 export async function getQuizList() {
   try {
-    return await request.get("/quiz/list");
+    return await request.get('/quiz/list');
   } catch (error: any) {
     return error.response
   }
@@ -90,9 +84,11 @@ export async function getQuizList() {
 
 export async function postAddQuiz(data: any) {
   try {
-    return await request.post("/quiz/addquiz", data);
+    const response = await request.post('/quiz/addquiz', data);
+    return response
   } catch (error: any) {
-    return error.response;
+    return error.response
+
   }
 }
 
@@ -123,17 +119,18 @@ export async function getQuestionList(quizeId: string | undefined) {
   }
 }
 
-export async function getFilteredQuestionList(data: string, byQuiz?:boolean, page?:number) {
+export async function getFilteredQuestionList(data: string, byQuiz?: boolean, page?: number) {
   try {
-    return await request.get(`/question/filteredlist/${byQuiz}/?data=${data}&page=${page}`);
+    const response = await request.get(`/question/filteredlist/${byQuiz}/?data=${data}&page=${page}`);
+    return response;
   } catch (error: any) {
     return error.response
   }
 }
 
-export async function getAllQuestionList() {
+export async function getQuizDetailsForQuestion(id: string) {
   try {
-    return await request.get(`/question/list`);
+    return await request.get(`/quiz/list/${id}`);
   } catch (error: any) {
     return error.response
   }
@@ -143,9 +140,10 @@ export async function postAddQuestionexcel(data: any) {
   try {
     return await request.post(`/question/addquestionexcel`, data);
   } catch (error: any) {
-    return error.response;
+    return error.response
   }
 }
+
 export async function postAddQuestion(data: any) {
   try {
     return await request.post('/question/addquestion', data);
@@ -153,20 +151,7 @@ export async function postAddQuestion(data: any) {
     return error.response
   }
 }
-export async function postAddQuestions(data: any) {
-  try {
-    return await request.post('/question/addque', data);
-  } catch (error: any) {
-    return error.response
-  }
-}
-export async function getQuestions(id: any) {
-  try {
-    return await request.get(`/question/getque/${id}`);
-  } catch (error: any) {
-    return error.response
-  }
-}
+
 export async function getQuestion(id: any) {
   try {
     return await request.get(`/question/editquestionlist/${id}`);
@@ -174,7 +159,6 @@ export async function getQuestion(id: any) {
     return error.response
   }
 }
-
 export async function postEditQuestion(id: any, data: any) {
   try {
     return request.post(`/question/editquestion/${id}`, data);
@@ -188,22 +172,6 @@ export async function postDeleteQuestion(id: any) {
     return request.post(`/question/removequestion/${id}`);
   } catch (error: any) {
     return error.response
-  }
-}
-
-export async function getQuizAttempList() {
-  try {
-    return await request.get("/quizattempt/list");
-  } catch (error: any) {
-    return error.response;
-  }
-}
-
-export async function postAddQuizAttempt(data: any) {
-  try {
-    return await request.post("/quizattempt/addattempt", data);
-  } catch (error: any) {
-    return error.response;
   }
 }
 

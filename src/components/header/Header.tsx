@@ -15,7 +15,8 @@ const Header: React.FC = () => {
     const location = useLocation();
     const nevigate = useNavigate();
     const { walletList, walletFetching, walletLoading, walletFetch } = useWallet();
-    const { webDetailList, webDetailLoading, webDetailFetching, webDetailFetch, webDetailerror } = useWebDetail()
+    const { webDetailList, webDetailFetch } = useWebDetail();
+
     const userFind = localStorage.getItem('token')
     useEffect(() => {
         const coin = sessionStorage.getItem('coin')
@@ -31,19 +32,19 @@ const Header: React.FC = () => {
             webDetailFetch();
         }
     }, [])
-    // console.log(Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0)
+
     return (
         <>
             <div className={classes.mainheader}>
-                <div className='flex align-center'>
+                <div className='d-flex align-center'>
                     {location.pathname === '/login' &&
                         <div className={classes.lefticon} onClick={() => nevigate(-1)}>
                             <SlArrowLeft />
                         </div>}
-                    <img src={Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0 ? webDetailList.response[0].image :logo} alt="logo" style={{ width: "40px" }} />
+                    <img src={Object.keys(webDetailList).length > 0 ? webDetailList.response[0].image : logo} alt="logo" style={{ width: "40px" }} />
                 </div>
-                <div className='flex align-center'>
-                    <div className='flex align-center'>
+                <div className='d-flex align-center'>
+                    <div className='d-flex align-center'>
                         <img src={reward} className={classes.logo} alt='logo' />
                         <Typography className={classes.headerReward} >Daily Reward</Typography>
                     </div>

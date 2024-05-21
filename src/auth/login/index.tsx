@@ -1,7 +1,6 @@
 import Login from './Login'
 
 const LoginIndex = () => {
-
     return <Login />
 }
 

@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import bg from "../../asset/images/banner/main-bg.png";
+import bg from "../../asset/images/banner/main-bg.svg";
 
 const usecategoryStyles = makeStyles((theme) => ({
     dialog: {
@@ -60,7 +60,7 @@ const usecategoryStyles = makeStyles((theme) => ({
         width: "600px",
         borderRadius: "14px !important",
         margin: "0 20px",
-        position: 'relative',
+        position:'relative',
         [theme.breakpoints.down('xs')]: {
             height: "calc(100vh - 45px)",
             margin: '15px',
@@ -171,6 +171,10 @@ const usecategoryStyles = makeStyles((theme) => ({
         borderRadius: "10px",
         borderColor: "transparent",
         marginRight: "10px",
+        [theme.breakpoints.down("xs")]: {
+            padding: "10px",
+            fontSize:'14px'
+        },
     },
     joinexambtngest: {
         padding: "10px 15px",
@@ -179,6 +183,10 @@ const usecategoryStyles = makeStyles((theme) => ({
         border: "1px solid var(--gredient-color)",
         borderRadius: "10px",
         marginLeft: "10px",
+        [theme.breakpoints.down("xs")]: {
+            padding: "10px",
+            fontSize:'14px'
+        },
     },
     joinexamterms: {
         color: "var(--whitebglight-color)",
@@ -278,40 +286,38 @@ const usecategoryStyles = makeStyles((theme) => ({
         fontFamily: 'Poppins, sans-serif !important',
         color: 'var(--text-color)'
     },
-    // question: {
-    //     color: '#f0f8ff8f',
-    //     fontSize: "16px !important",
-    //     marginBottom: "20px !important",
-    //     fontFamily: 'Poppins, sans-serif !important',
-    // },
-    // opetionBox: {
-    //     gap: '0.75rem',
-    //     display: 'grid',
-    //     gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
-    //     minWidth: '100%',
-    //     [theme.breakpoints.down('xs')]: {
-    //         gridTemplateColumns: 'repeat(1,minmax(0,1fr))',
-    //     },
-    // },
-    // opetions: {
-    //     padding: '10px',
-    //     borderRadius: '10px',
-    //     border: '1px solid var(--text-color)',
-    //     fontSize: "16px",
-    //     color: 'var(--text-color)',
-    //     display: 'flex',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     minHeight: "46px"
-    // },
-    // correctanscss: {
-    //     backgroundColor: 'var(--success-color)',
-    //     borderColor: 'var(--success-color)'
-    // },
-    // wronganscss: {
-    //     backgroundColor: 'var(--danger-color)',
-    //     borderColor: 'var(--danger-color)'
-    // },
+    question: {
+        color: '#f0f8ff8f',
+        fontSize: "16px !important",
+        marginBottom: "20px !important",
+        fontFamily: 'Poppins, sans-serif !important',
+    },
+    opetionBox: {
+        gap: '0.75rem',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
+        minWidth: '100%',
+        [theme.breakpoints.down('xs')]: {
+            gridTemplateColumns: 'repeat(1,minmax(0,1fr))',
+        },
+    },
+    opetions: {
+        padding: '10px',
+        borderRadius: '10px',
+        border: '1px solid var(--text-color)',
+        fontSize: "16px",
+        color: 'var(--text-color)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight:"46px"
+    },
+    correctanscss: {
+        backgroundColor: 'var(--success-color)',
+    },
+    wronganscss: {
+        backgroundColor: 'var(--danger-color)'
+    },
     usercoinbtn: {
         padding: "10px 15px",
         backgroundImage: "linear-gradient(180deg, #7b4bff 0%, #a35eff 100%)",
@@ -322,7 +328,7 @@ const usecategoryStyles = makeStyles((theme) => ({
         width: "170px",
         textAlign: "center",
         [theme.breakpoints.down('xs')]: {
-            width: "120px"
+            width: "140px"
         },
     },
 

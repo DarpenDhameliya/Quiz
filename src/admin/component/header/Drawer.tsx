@@ -14,7 +14,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { BiCookie, BiBell, BiMoney, BiLineChart } from 'react-icons/bi';
+import { BiCookie, BiBell, BiMoney } from 'react-icons/bi';
 
 let DrawerOpenWidth = 260;
 interface MenuItem {
@@ -28,11 +28,9 @@ const Sidebar = () => {
     const classes = useStyleDrawer();
     const location = useLocation();
     const navigate = useNavigate();
-
     const handleMobileSidebar = useCallback(() => {
         setMobileSidebaropen(!mobileSidebaropen);
     }, [mobileSidebaropen]);
-
 
     const handleLogout = useCallback(() => {
         navigate('/ad-login')
@@ -54,7 +52,7 @@ const Sidebar = () => {
         <>
             <Box sx={{ display: "flex" }}>
                 <CssBaseline />
-                <AppBar position="fixed" style={{ background: "#367fa9" }} >
+                <AppBar position="fixed" className={classes.appbar} >
                     <Toolbar className={classes.setHeadermobile}>
                         <IconButton
                             color="inherit"
@@ -94,7 +92,7 @@ const Sidebar = () => {
                             boxSizing: "border-box",
                             width: DrawerOpenWidth,
                         },
-                        "& .MuiPaper-root": { backgroundColor: "#222d32" },
+                        "& .MuiPaper-root": { backgroundColor: "#343a40" },
                     }}
                 >
                     <span className={classes.setType}>

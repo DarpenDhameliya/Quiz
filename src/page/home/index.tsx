@@ -1,21 +1,19 @@
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, lazy } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Slider from "react-slick"
 import "slick-carousel/slick/slick-theme.css"
 import "slick-carousel/slick/slick.css"
-import HomeCard from '../../components/card/homecard'
-import WorkSpace from '../../components/container'
-import Footer from '../../components/footer/Footer'
-import Header from '../../components/header/Header'
 import ads from '../../asset/logo/add.jpg'
 import useHomeStyles from './HomeStyle'
 import Loader from '../../components/loader/Loader'
 import { useQuiz } from '../../context/quizContext'
 import { useApp } from '../../context/categoryContext'
-import { getQuestions } from '../../api'
 
+const HomeCard = lazy(() => import('../../components/card/homecard'));
+const Footer = lazy(() => import('../../components/footer/Footer'));
+const Header = lazy(() => import('../../components/header/Header'));
 interface category {
     id: number;
     name: string;
@@ -69,13 +67,10 @@ const Home = () => {
         if (Object.keys(categoryList).length === 0) {
             categoryFetch();
         }
-
- 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
-        if (!quizLoading && !quizFetching) {
+        if (quizList && categoryList) {
             const userData = localStorage.getItem('token')
             if (!userData) {
                 localStorage.setItem('type', 'guest')
@@ -83,22 +78,13 @@ const Home = () => {
                 localStorage.setItem('type', 'user')
             }
         }
-    }, [quizLoading, quizFetching])
+    }, [quizList, categoryList])
 
-
-    const handleclick = useCallback((name: number) => {
+    const handleclick = (name: number) => {
         nevigate(`/show/${name}`)
-    }, [nevigate])
+    }
 
     const CardView = useCallback(() => {
-        const callfun = async () => {
-            const response = await getQuestions('1')
-            console.log(response)
-        }
-        setTimeout(() => {
-
-            callfun()
-        }, 3000);
         const playedQuizid = sessionStorage.getItem('quiz')
         const playedDate = sessionStorage.getItem('date')
         if (playedQuizid && !userfind) {
@@ -120,7 +106,7 @@ const Home = () => {
             })
         } else {
             return (<>
-                {quizList && quizList.response.map((data: any) => {
+                {Object.keys(quizList).length > 0 && quizList.response.map((data: any) => {
                     return <Grid item xs={12} sm={12} md={12} key={data.id}>
                         <HomeCard data={data} handleclick={handleclick} />
                     </Grid>
@@ -131,43 +117,41 @@ const Home = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizList])
 
-    const selectedCategory = useCallback((data: any) => {
+    const callfun = (data: any) => {
         nevigate(`/category/${data.name}`)
-    }, [nevigate])
-
+    }
     return (
         <>
-            <WorkSpace>
-                <Paper className={classes.setProductpape} elevation={5}>
-                    <Header />
-                    <div className={classes.loginscroll}>
-                        <div className='flex justify-center ads-box' style={{ marginBottom: 20 }}>
-                            <img src={ads} alt='ad' style={{
-                                width: '480px',
-                                maxHeight: '320px'
-                            }} />
-                        </div>
-                        {(quizLoading || quizFetching || categoryLoading || categoryFetching || Object.keys(categoryList).length === 0 || Object.keys(quizList).length === 0) ?
-                            <Loader />
-                            :
-                            <Slider {...settings} className="custom-slider" >
-                                {categoryList && categoryList.response.map((data: category) => {
-                                    return <div key={data.id} className={classes.sliderdiv} onClick={() => selectedCategory(data)}>
-                                        <h4 className={classes.slidertext} >{data.name}</h4>
-                                    </div>
-                                })}
-                            </Slider>
-                        }
-                        {!categoryFetching && !quizFetching && <div className={classes.sliderBorder} />}
-                        <Grid container spacing={2} >
-                            {(!quizLoading && !quizFetching && !categoryLoading && !categoryFetching && Object.keys(categoryList).length !== 0 && Object.keys(quizList).length !== 0) &&
-                                CardView()
-                            }
-                        </Grid>
+            <Paper className={classes.setProductpape} elevation={5}>
+                <Header />
+                <div className={classes.loginscroll}>
+                    <div className='d-flex justify-center ads-box' style={{ marginBottom: 20 }}>
+                        <img src={ads} alt='ad' style={{
+                            width: '480px',
+                            maxHeight: '320px'
+                        }} />
                     </div>
-                    <Footer />
-                </Paper>
-            </WorkSpace>
+                    {(quizLoading || quizFetching || categoryLoading || categoryFetching || Object.keys(categoryList).length === 0 || Object.keys(quizList).length === 0) ?
+                        <Loader />
+                        :
+                        <Slider {...settings} className="custom-slider" >
+                            {Object.keys(categoryList).length > 0 && categoryList.response.map((data: category) => {
+                                return <div key={data.id} className={classes.sliderdiv} onClick={() => callfun(data)}>
+                                    <h4 className={classes.slidertext} >{data.name}</h4>
+                                </div>
+                            })}
+                        </Slider>
+                    }
+
+                    <div className={classes.sliderBorder} />
+                    <Grid container spacing={2}>
+                        {(!quizLoading && !quizFetching && !categoryLoading && !categoryFetching && Object.keys(categoryList).length !== 0 || Object.keys(quizList).length !== 0) &&
+                            CardView()
+                        }
+                    </Grid>
+                </div>
+                <Footer />
+            </Paper>
         </>
     )
 }

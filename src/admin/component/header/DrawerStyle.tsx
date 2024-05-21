@@ -46,19 +46,24 @@ const useStyleDrawer = makeStyles((theme) => ({
     paddingTop: "2px !important",
     paddingBottom: "0px !important",
     "& .Mui-selected": {
-      backgroundColor: "rgb(43 123 203 / 45%) !important",
+      backgroundColor: "#004c99 !important",
       borderRadius: "0 25px 25px 0",
-      borderLeft: "4px solid #00BFA5",
       "&:hover": {
-        backgroundColor: "rgb(43 123 203 / 45%) !important",
+        backgroundColor: "#004c99 !important",
       },
     },
   },
   effectlist: {
+    paddingLeft:"28px !important",
     "&:hover": {
       backgroundColor: "rgba(255,255,255,.1) !important",
-      borderRadius: "0 25px 25px 0",
+    //   borderRadius: "0 25px 25px 0",
     },
+  },
+  appbar: {
+    backgroundColor:'#fff !important',
+    color:'black !important',
+    boxShadow: 'none !important',
   },
   setsidebaricon: {
     color: "white",
@@ -90,11 +95,6 @@ const useStyleDrawer = makeStyles((theme) => ({
     [theme.breakpoints.between('md', 'lg')]: {
       fontSize: '19px !important',
     },
-  },
-  appbar: {
-    backgroundColor:'#fff !important',
-    color:'black !important',
-    boxShadow: 'none !important',
   },
 }));
 

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import React, { ReactNode } from "react";
 import animation5 from "../../asset/images/banner/icon-animation1.png";
 import animation1 from "../../asset/images/banner/img-animation1-home3.png";
@@ -10,7 +10,7 @@ import animation7 from "../../asset/images/banner/img-animation6-home3.png";
 import animation8 from "../../asset/images/banner/img-animation7-home3.png";
 import animation6 from "../../asset/images/banner/img-animation8-home3.png";
 import animation11 from "../../asset/images/banner/icon-animation2.png";
-import workspaceBg from "../../asset/images/banner/main-bg.png";
+import workspaceBg from "../../asset/images/banner/main-bg.svg";
 import animation12 from "../../asset/images/banner/img-animation20.png";
 import "./index.css";
 
@@ -55,7 +55,7 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ children }) => {
                 <div className="shape-10 dots shape" />
                 <div className="shape-11 shape">
                     <img src={animation11} />
-                </div> 
+                </div>
                 <div className="shape-12 shape">
                     <img src={animation12} />
                 </div>
@@ -66,3 +66,5 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ children }) => {
 };
 
 export default WorkSpace;
+
+

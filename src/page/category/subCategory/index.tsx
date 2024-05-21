@@ -1,15 +1,21 @@
 import Paper from '@mui/material/Paper';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, lazy } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import HomeCard from '../../../components/card/homecard';
-import WorkSpace from '../../../components/container';
-import Footer from '../../../components/footer/Footer';
-import Header from '../../../components/header/Header';
 import usecategoryStyles from '../Category';
 import Loader from '../../../components/loader/Loader';
 import { useQuiz } from '../../../context/quizContext';
-import { cardvalue } from '../../../components/type';
 
+const HomeCard = lazy(() => import('../../../components/card/homecard'));
+const Footer = lazy(() => import('../../../components/footer/Footer'));
+const Header = lazy(() => import('../../../components/header/Header'));
+interface cardvalue {
+    id: number;
+    name: string;
+    totalPrice: string;
+    entryFee: string;
+    image: string;
+    live: number;
+}
 
 const SubCategory = () => {
     const [cardList, setCardList] = useState<cardvalue[] | null>(null)
@@ -29,6 +35,7 @@ const SubCategory = () => {
             let finddata = quizList.response.filter((data: cardvalue) => { return data.name === categorydata.id && data.live !== 0 })
             setCardList(finddata)
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizList])
 
@@ -36,17 +43,15 @@ const SubCategory = () => {
         const handleclick = (data: number) => {
             nevigate(`/show/${data}`)
         }
+
         return (<>
-            {/* {cardList?.map((data:cardvalue) => { */}
-            {cardList?.map((data: any) => {
+            {cardList?.map((data) => {
                 return <HomeCard data={data} handleclick={handleclick} />
             })}
         </>)
 
     }, [cardList, nevigate])
-
     return (
-        <WorkSpace>
             <Paper className={classes.setProductpape} elevation={5}>
                 <Header />
                 <div className={classes.loginscroll}>
@@ -54,7 +59,6 @@ const SubCategory = () => {
                 </div>
                 <Footer />
             </Paper>
-        </WorkSpace>
     )
 }
 

@@ -3,15 +3,12 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles';
 import { FaPlay } from "react-icons/fa";
 
-
 interface cardvalue {
     id: number;
     name: string;
     totalPrice: string;
-    entryFee: number;
+    entryFee: string;
     image: string;
-    category_id: number;
-    live: number;
 }
 
 interface HomeCardProps {
@@ -94,12 +91,12 @@ const HomeCard: React.FC<HomeCardProps> = ({ data, handleclick }) => {
     const classes = useStyles();
     return (
         <div className={classes.cardmaindiv} key={data.id}>
-            <div className='flex justify-between align-center'>
+            <div className='d-flex justify-between align-center'>
                 <div className={classes.cardimgmain}>
                     <img src={data.image} alt='quize logo' className={classes.cardimage} />
                 </div>
                 <div className={classes.cardmiddle}>
-                    <div className='flex justify-between flex-column align-end' >
+                    <div className='d-flex justify-between flex-column align-end' >
                         <div className='fs-12 examcolor' style={{ color: '#00ffff' }}>
                             {data.name}
                         </div>

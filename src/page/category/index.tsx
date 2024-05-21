@@ -1,22 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, lazy } from 'react'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer';
 import usecategoryStyles from './Category';
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
-import WorkSpace from '../../components/container';
 import { useSnackbar } from 'notistack';
 import Loader from '../../components/loader/Loader';
 import { useApp } from '../../context/categoryContext';
 import { useQuiz } from '../../context/quizContext';
-import { cardvalue } from '../../components/type'
 
-
-
+const Footer = lazy(() => import('../../components/footer/Footer'));
+const Header = lazy(() => import('../../components/header/Header'));
+interface cardvalue {
+  id: number;
+  name: string;
+  totalPrice: string;
+  entryFee: string;
+  image: string;
+}
 
 const Category = () => {
   const [searchval, setSearchval] = useState('')
@@ -24,7 +27,7 @@ const Category = () => {
   const nevigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { categoryList, categoryFetch, categoryLoading, categoryFetching } = useApp();
-  const { quizList, quizLoading, quizFetching, quizFetch, quizerror } = useQuiz();
+  const { quizList, quizFetching, quizFetch, quizerror } = useQuiz();
 
   useEffect(() => {
     if (Object.keys(quizList).length === 0) {
@@ -54,17 +57,16 @@ const Category = () => {
       const filteredList = categoryList?.response.filter((record: any) =>
         record.name.toLocaleLowerCase().includes(searchval.toLocaleLowerCase())
       );
-
       return (<>
         {filteredList?.map((data: any) => {
           return <Grid item xs={12} sm={6} key={data.id}>
             <div className={classes.cardmaindiv} onClick={() => handleCategoryDetails(data.id)}>
-              <div className='flex align-center'>
+              <div className='d-flex align-center'>
                 <div className={classes.cardimgmain}>
                   <img src={data.image} alt='quize logo' className={classes.cardimage} />
                 </div>
                 <div className={classes.cardmiddle}>
-                  <div className='flex justify-between flex-column align-end' >
+                  <div className='d-flex justify-between flex-column align-end' >
                     <div className={classes.cardwintext}>
                       {data.name}
                     </div>
@@ -80,7 +82,6 @@ const Category = () => {
   }, [categoryList, searchval, quizFetching])
 
   return (
-    <WorkSpace>
       <Paper className={classes.setProductpape} elevation={5}>
         <Header />
 
@@ -98,7 +99,6 @@ const Category = () => {
         </div>
         <Footer />
       </Paper>
-    </WorkSpace>
   )
 }
 

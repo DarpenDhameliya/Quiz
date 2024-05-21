@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { getCategoryList, getWebDetail } from '../api/index';
+import { getWebDetail } from '../api/index';
 import { useNavigate } from 'react-router-dom';
 
 type WebContextType = {

@@ -9,8 +9,8 @@ import Button from '@mui/material/Button';
 import { postAddWebDetail, postEditWebDetail } from '../../../api';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../../../components/loader/Loader';
 import { useWebDetail } from '../../../context/settingContext';
+import Loader from '../../../components/loader/Loader';
 
 const Setting = () => {
     const [image, setImage] = useState<File | null>(null)
@@ -36,8 +36,7 @@ const Setting = () => {
     }, [])
 
     useEffect(() => {
-        console.log(webDetailList)
-        if (Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0) {
+        if (Object.keys(webDetailList).length > 0) {
             setUpdateData(true)
             setUpdateId(webDetailList.response[0].id)
             setWebName(webDetailList.response[0].websitename)

@@ -1,12 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 const getToken = (): string | null => {
     return localStorage.getItem('token');
 };
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:8001/api/',
-    // baseURL: 'http://192.168.29.141:8000/api/',
+    baseURL: 'http://192.168.0.42:8000/api/',
     // withCredentials: true,
 });
 

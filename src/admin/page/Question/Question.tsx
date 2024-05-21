@@ -1,532 +1,299 @@
-import React, { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
+import React, { useCallback, useEffect, useState } from 'react'
+import Paper from '@mui/material/Paper'
 import Container from "@mui/material/Container";
-import useQuizStyles from "../category/QuizStyle";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import {
-  FormControl,
-  FormControlLabel,
-  MenuItem,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
-} from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import {
-  getAllQuestionList,
-  getFilteredQuestionList,
-  postAddQuestionexcel,
-  postAddQuestions,
-} from "../../../api";
-
-import { useApp } from "../../../context/categoryContext";
-import { styled } from "@mui/material/styles";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import { useSnackbar } from "notistack";
+import useQuizStyles from '../category/QuizStyle';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
+import { getFilteredQuestionList, getQuizDetailsForQuestion, postDeleteQuestion } from '../../../api';
+import { useQuery } from 'react-query';
+import TableCell from "@mui/material/TableCell";
+import { useSnackbar } from 'notistack';
 import { FaEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { useQuiz } from "../../../context/quizContext";
-import Checkbox from "@mui/material/Checkbox";
-import Pagination from "@mui/material/Pagination";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import { useQuiz } from '../../../context/quizContext';
+import Checkbox from '@mui/material/Checkbox';
+import Pagination from '@mui/material/Pagination';
+import { BsChevronDown } from "react-icons/bs";
+import { BsChevronUp } from "react-icons/bs";
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../../../components/loader/Loader';
+import Button from '@mui/material/Button';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-interface Question {
-  id: number;
-  question: string;
-  correct: boolean; // Assuming correct is a boolean, change to appropriate type if needed
-  quiz_id: number;
-}
 const Question = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [question, setQuestion] = useState<Question[]>([]);
-  const [searchByQuizId, setSearchByQuizId] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
-  const [perPage, setPerPage] = useState(0);
-  const [selectedIds, setSelectedIds] = useState<any>([]);
-  const [name, setName] = useState("");
-  const [totalPrice, setTotalPrice] = useState("");
-  const [entryFee, setEntryFee] = useState("");
-  const [live, setLive] = useState(false);
-  const [category_id, setCategory_id] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [date, setDate] = useState('')
-  const classes = useQuizStyles();
-  const { categoryList, categoryFetch, categoryLoading, categoryFetching } =
-    useApp();
-  const { quizList, quizLoading, quizFetching, quizFetch } = useQuiz();
-  const [error, setError] = useState("");
-  const { enqueueSnackbar } = useSnackbar();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+    const [collapsId, setCollapsId] = useState('')
+    const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+    const [question, setQuestion] = useState([])
+    const [collapsData, setCollapsData] = useState<any>({})
+    const [searchByQuizId, setSearchByQuizId] = useState(false)
+    const [totalPages, setTotalPages] = useState(0)
+    const [perPage, setPerPage] = useState(0)
+    const [open, setOpen] = useState<number | null>(null);
+    const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (Object.keys(categoryList).length === 0) {
-      categoryFetch();
+    const { quizList, quizFetch } = useQuiz();
+    const classes = useQuizStyles()
+    const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        if (Object.keys(quizList).length === 0) {
+            quizFetch();
+        }
+    }, [])
+
+    const { data: QuizData, refetch: questionFetch } = useQuery(
+        ['get-FilteredQuestion-list', page, search, searchByQuizId],
+        async () => await getFilteredQuestionList(search, searchByQuizId, page),
+        {
+            staleTime: Infinity,
+        }
+    );
+
+    useEffect(() => {
+        if (QuizData && QuizData.data.response) {
+            setQuestion(QuizData.data.response.data)
+            setTotalPages(QuizData.data.response.totalPage);
+            setPerPage(QuizData.data.response.perPage)
+        } else {
+            if (QuizData) {
+                enqueueSnackbar(
+                    QuizData.data.error,
+                    { variant: 'error', autoHideDuration: 2000 },
+                );
+                if (QuizData.status === 401) {
+                    navigate('/login')
+                }
+            }
+        }
+    }, [QuizData])
+
+    const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+        setPage(1);
     }
-    if (Object.keys(quizList).length === 0) {
-      quizFetch();
-    }
 
-    // getAllQuestion();
-  }, []);
+    const findQuizName = useCallback((quizId: any) => {
+        const quiz = quizList?.response.find((data: any) => data.id === quizId);
+        return quiz ? quiz.title : "";
+    }, [quizList]);
 
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      const response = await getFilteredQuestionList(
-        search,
-        searchByQuizId,
-        page
-      );
-      if (response.data.status === "ok") {
-        setQuestion(response.data.response.data);
-        setTotalPages(response.data.response.totalPage);
-        setPerPage(response.data.response.perPage);
-      } else {
-        enqueueSnackbar(response.data.error, {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-      }
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
     };
 
-    fetchQuestions();
-  }, [page, search, searchByQuizId]);
+    const handleCollapseOpen = (id: string, index: any) => {
+        setCollapsId(id);
+        setOpen(open === index ? null : index);
+    };
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    setPage(1);
-  };
-
-  const handleImageChnage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-    }
-  };
-
-  const handlesenddata = async () => {
-    const formData = new FormData();
-    if (image) {
-      formData.append("image", image);
-    }
-    const response = await postAddQuestionexcel(formData);
-  };
-
-  const findQuizName = (quizId: any) => {
-    const quiz =
-      Object.keys(quizList).length > 0 &&
-      question.length > 0 &&
-      quizList?.response.find((data: any) => data.id === quizId);
-    return quiz ? quiz.name : "";
-  };
-
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
-
-  const handleCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      setSelectedIds((prevIds: any) => [...prevIds, id]); // Add ID to selected IDs
-    } else {
-      setSelectedIds((prevIds: any) =>
-        prevIds.filter((prevId: any) => prevId !== id)
-      ); // Remove ID from selected IDs
-    }
-  };
-
-  const handleAddQuiz = () => {
-    setOpen(true);
-  };
-
-  const handleAddQuizDb = async () => {
-    const data = {
-      question:selectedIds,
-      title: name,
-      totalPrice,
-      entryFee,
-      category_id,
-      live,
-      start_time: startTime,
-      end_time: endTime,
-      date
-    }
-
-    const responce = await postAddQuestions(data)
-    console.log(responce)
-  };
-  return (
-    <>
-      <Container
-        component="main"
-        maxWidth="xl"
-        className={classes.setcontainer}
-      >
-        <div className={classes.setpageheading}>
-          <Typography
-            variant="h5"
-            gutterBottom
-            className={classes.setheading_h4}
-          >
-            Category
-          </Typography>
-        </div>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Paper className={classes.setProductpaper} elevation={5}>
-              <div className="flex">
-                <TextField
-                  type="file"
-                  id="category_id"
-                  size="small"
-                  variant="outlined"
-                  className={`m-0 w-full`}
-                  placeholder="image * "
-                  InputLabelProps={{ shrink: false }}
-                  onChange={handleImageChnage}
-                />
-                {error && <span>{error}</span>}
-                <div className={`ml-5`}>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    className={`m-0 ${classes.setsendbtninside}`}
-                    onClick={handlesenddata}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper className={classes.setProductpaper} elevation={5}>
-              <div className="flex">
-                <TextField
-                  type="text"
-                  size="small"
-                  variant="outlined"
-                  className={`m-0 w-full`}
-                  placeholder="Search ..."
-                  InputLabelProps={{ shrink: false }}
-                  onChange={handleSearch}
-                />
-                <div
-                  className="flex items-center"
-                  style={{ minWidth: "170px" }}
-                >
-                  <Checkbox
-                    color="default"
-                    checked={searchByQuizId}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setSearchByQuizId(e.target.checked)
-                    }
-                  />
-                  <span>Search by Quiz</span>
-                </div>
-              </div>
-              <TableContainer>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center" className={classes.tableth}>
-                        No.
-                      </TableCell>
-                      <TableCell align="center" className={classes.tableth}>
-                        select Question
-                      </TableCell>
-                      <TableCell align="center" className={classes.tableth}>
-                        Question
-                      </TableCell>
-                      <TableCell align="center" className={classes.tableth}>
-                        Correct
-                      </TableCell>
-                      <TableCell align="center" className={classes.tableth}>
-                        Quiz
-                      </TableCell>
-                      <TableCell align="center" className={classes.tableth}>
-                        action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {question.length > 0 &&
-                      question.map((e: any, index: number) => {
-                        return (
-                          <StyledTableRow>
-                            <StyledTableCell
-                              align="center"
-                              component="th"
-                              scope="row"
-                              className={classes.tabletd}
-                            >
-                              {(page - 1) * perPage + (index + 1)}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              align="center"
-                              component="th"
-                              scope="row"
-                              className={classes.tabletd}
-                            >
-                              <Checkbox
-                                color="default"
-                                checked={selectedIds.includes(e.id)} // Check if ID is in selectedIds
-                                onChange={(event) =>
-                                  handleCheckboxChange(event, e.id)
-                                }
-                              />
-                            </StyledTableCell>
-                            <StyledTableCell
-                              className={classes.tabletd}
-                              align="center"
-                            >
-                              {/* {e.question.substring(0, 40) + "..."} */}
-                              {e.question}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              className={classes.tabletd}
-                              align="center"
-                            >
-                              {e.correct}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              className={classes.tabletd}
-                              align="center"
-                            >
-                              {findQuizName(e.quiz_id)}
-                            </StyledTableCell>
-                            <StyledTableCell
-                              className={classes.tabletdicon}
-                              align="center"
-                            >
-                              <div className="flex justify-center">
-                                <div>
-                                  <Tooltip title="Edit">
-                                    <FaEdit className={classes.seteditincon} />
-                                  </Tooltip>
-                                </div>
-                                <div>
-                                  <Tooltip title="Remove">
-                                    <FaTrashAlt
-                                      className={classes.setdeleteincon}
-                                    />
-                                  </Tooltip>
-                                </div>
-                              </div>
-                            </StyledTableCell>
-                          </StyledTableRow>
+    useEffect(() => {
+        if (typeof open === 'number') {
+            const getCollapsData = async () => {
+                setIsLoading(true)
+                try {
+                    const response = await getQuizDetailsForQuestion(collapsId);
+                    if (response.data.status === 'ok') {
+                        setCollapsData(response.data.response);
+                        setIsLoading(false)
+                    } else {
+                        setIsLoading(false)
+                        enqueueSnackbar(
+                            response.data.error,
+                            { variant: 'error', autoHideDuration: 2000 },
                         );
-                      })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
-              <div className="flex justify-between">
-                <Pagination
-                  page={page}
-                  count={totalPages}
-                  onChange={handleChange}
-                  shape="rounded"
-                  size="small"
-                />
-                <Button
-                  variant="contained"
-                  size="medium"
-                  className={`m-0 ${classes.setsendbtninside}`}
-                  onClick={handleAddQuiz}
-                >
-                  Add
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            backgroundColor: "white",
-            border: "2px solid #000",
-            boxShadow: "0px 0px 24px rgba(0, 0, 0, 0.5)",
-            padding: 16,
-          }}
-        >
-          <TextField
-            type="text"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="Name *"
-            InputLabelProps={{ shrink: false }}
-            value={name}
-            onChange={(e: any) => setName(e.target.value)}
-          />
-          <TextField
-            type="text"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="prize *"
-            InputLabelProps={{ shrink: false }}
-            value={totalPrice}
-            onChange={(e: any) => setTotalPrice(e.target.value)}
-          />
-          <TextField
-            required
-            type="text"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="fee * "
-            InputLabelProps={{ shrink: false }}
-            value={entryFee}
-            onChange={(e: any) => setEntryFee(e.target.value)}
-          />
-          <TextField
-            required
-            type="time"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="start time * "
-            InputLabelProps={{ shrink: false }}
-            value={startTime}
-            onChange={(e: any) => setStartTime(e.target.value)}
-          />
-          <TextField
-            required
-            type="time"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="end time * "
-            InputLabelProps={{ shrink: false }}
-            value={endTime}
-            onChange={(e: any) => setEndTime(e.target.value)}
-          />
-          <TextField
-            required
-            type="date"
-            id="outlined-basic"
-            size="small"
-            variant="outlined"
-            className={classes.settextfield}
-            placeholder="date * "
-            InputLabelProps={{ shrink: false }}
-            value={date}
-            onChange={(e: any) => setDate(e.target.value)}
-          />
-          <FormControl size="small" required>
-            <Select
-              displayEmpty
-              value={category_id}
-              onChange={(e: SelectChangeEvent) =>
-                setCategory_id(e.target.value)
-              }
-              input={<OutlinedInput />}
-              renderValue={(selected) => {
-                if (selected.length === 0) {
-                  return (
-                    <span className={classes.selectplaceholder}>
-                      select quiz *
-                    </span>
-                  );
+                    }
+                } catch (error: any) {
+                    setIsLoading(false)
+                    enqueueSnackbar(
+                        error,
+                        { variant: 'error', autoHideDuration: 2000 },
+                    );
                 }
-                const selectedCategory = categoryList.response.find(
-                  (c: any) => c.id === selected
-                );
-                return selectedCategory.name;
-              }}
-              className={classes.settextfield}
-              inputProps={{ "aria-label": "Without label" }}
-            >
-              <MenuItem disabled value="">
-                <em>Placeholder</em>
-              </MenuItem>
-              {Object.keys(categoryList).length !== 0 &&
-                categoryList.response.map((e: any) => {
-                  return (
-                    <MenuItem key={e.id} value={e.id}>
-                      {e.name}
-                    </MenuItem>
-                  );
-                })}
-            </Select>
-          </FormControl>
-          <FormControlLabel
-            style={{ width: "fit-content" }}
-            control={
-              <Checkbox
-                checked={live}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setLive(e.target.checked)
-                }
-              />
             }
-            label="Live"
-          />
-          <Button
-            variant="contained"
-            size="medium"
-            className={`m-0 ${classes.setsendbtninside}`}
-            onClick={handleAddQuizDb}
-          >
-            Add
-          </Button>
-        </Box>
-      </Modal>
-    </>
-  );
-};
+            getCollapsData();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open])
 
-export default Question;
+    const editQuestion = useCallback((id: number) => {
+        navigate(`/admin/question/${id}`)
+    }, [])
+
+    const removeQuestion = async (id: number) => {
+        setIsLoading(true)
+        const response = await postDeleteQuestion(id)
+        if (response.data.status === 'ok') {
+            setIsLoading(false)
+            questionFetch();
+        } else {
+            setIsLoading(false)
+            enqueueSnackbar(
+                response.data.error,
+                { variant: 'error', autoHideDuration: 2000 },
+            );
+        }
+    }
+
+    const navigateNewQuestion = () => {
+        navigate('/admin/question/add')
+    }
+    return (
+        <>
+            <Container
+                component="main"
+                maxWidth="xl"
+                className={classes.setcontainer}
+            >
+                <div className={`py-2 ${classes.setpageheading}`}>
+                    <Typography variant="h5" gutterBottom className={classes.setheading_h4}>
+                        Question
+                    </Typography>
+                    <Button variant="contained" sx={{ bgcolor: '#6c757d ' }} size="medium" className={`m-0  ${classes.setsendbtninside}`} onClick={navigateNewQuestion}>
+                        Add
+                    </Button>
+                </div>
+                <Paper className={classes.setProductpaper} elevation={5}>
+                    {/* {questionLoading || questionFetching || question.length === 0 || quizFetching ?
+                                <Loader />
+                                : <> */}
+                    <div className='flex'>
+                        <TextField type='text' size="small" variant="outlined" className={`m-0 w-full`} placeholder="Search ..." InputLabelProps={{ shrink: false }} onChange={handleSearch} />
+                        <div className='flex items-center' style={{ minWidth: '150px' }}>
+                            <Checkbox color="default" checked={searchByQuizId} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchByQuizId(e.target.checked)} />
+                            <span className='text-sm'>Search by Quiz</span>
+                        </div>
+                    </div>
+
+                    <TableContainer>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center" className={classes.tableth}>
+                                        No.
+                                    </TableCell>
+                                    <TableCell align="center" className={`min-w-72 ${classes.tableth}`}>
+                                        Question
+                                    </TableCell>
+                                    <TableCell align="center" className={classes.tableth}>
+                                        Correct
+                                    </TableCell>
+                                    <TableCell align="center" className={classes.tableth}>
+                                        Quiz
+                                    </TableCell>
+                                    <TableCell align="center" className={classes.tableth}>
+                                        action
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {question.length > 0 && question.map((e: any, index: number) => {
+                                    return (<>
+                                        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} className={index % 2 === 0 ? 'bg-zinc-100' : ''}>
+                                            <TableCell align="center" component="th" scope="row" className={classes.tabletd}>
+                                                {(page - 1) * perPage + (index + 1)}
+                                            </TableCell>
+                                            <TableCell className={classes.tabletd} align="left">
+                                                {e.question}
+                                            </TableCell>
+                                            <TableCell className={classes.tabletd} align="center">
+                                                {e.correct}
+                                            </TableCell>
+                                            <TableCell className={classes.tabletd} align="center">
+                                                {findQuizName(e.quiz_id)}
+                                            </TableCell>
+                                            <TableCell className={classes.tabletdicon} align="center" >
+                                                <div className='flex justify-center items-center'>
+                                                    <IconButton
+                                                        aria-label="expand row"
+                                                        size="small"
+                                                        onClick={() => handleCollapseOpen(e.quiz_id, index)}
+                                                    >
+                                                        {open === index ? <BsChevronUp /> : <BsChevronDown />}
+                                                    </IconButton>
+                                                    <Tooltip title="Edit">
+                                                        <FaEdit className={classes.seteditincon} onClick={() => editQuestion(e.id)} />
+                                                    </Tooltip>
+                                                    <Tooltip title="Remove">
+                                                        <FaTrashAlt className={classes.setdeleteincon} onClick={() => removeQuestion(e.id)} />
+                                                    </Tooltip>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell style={{
+                                                paddingBottom: 0,
+                                                paddingTop: 0
+                                            }} colSpan={6}>
+                                                <Collapse in={open === index} timeout="auto" unmountOnExit>
+                                                    {isLoading ?
+                                                        <Loader />
+                                                        : <Box className={classes.collapsBox}>
+                                                            <Typography variant="h6" className='ff-poppins mb-0'
+                                                                gutterBottom component="div">
+                                                                Quiz Detail
+                                                            </Typography>
+                                                            <Table size="small"
+                                                                aria-label="purchases">
+                                                                <TableHead>
+                                                                    <TableRow>
+                                                                        <TableCell align="center" className={classes.tableth}>
+                                                                            Opetions
+                                                                        </TableCell>
+                                                                        <TableCell align="center" className={classes.tableth}>
+                                                                            price
+                                                                        </TableCell>
+                                                                        <TableCell align="center" className={classes.tableth}>
+                                                                            fee
+                                                                        </TableCell>
+                                                                        <TableCell align="center" className={classes.tableth}>
+                                                                            category
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                </TableHead>
+                                                                <TableBody>
+                                                                    <TableRow >
+                                                                        <TableCell className={classes.tabletd} component="th" align="center" scope="row">
+                                                                            {e.answer}
+                                                                        </TableCell>
+                                                                        <TableCell className={classes.tabletd} align="center">
+                                                                            {Object.keys(collapsData).length > 0 && collapsData[0].totalPrice}
+                                                                        </TableCell>
+                                                                        <TableCell className={classes.tabletd} align="center">
+                                                                            {Object.keys(collapsData).length > 0 && collapsData[0].entryFee}
+                                                                        </TableCell>
+                                                                        <TableCell className={classes.tabletd} align="center">
+                                                                            {Object.keys(collapsData).length > 0 && collapsData[0].category_name}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                </TableBody>
+                                                            </Table>
+                                                        </Box>}
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>)
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                    <Pagination page={page} count={totalPages} onChange={handleChange} shape="rounded" size="small" className='mt-2 d-flex justify-end' />
+                    {/* </>/ */}
+                    {/* } */}
+                </Paper>
+            </Container>
+        </>
+    )
+}
+
+export default Question

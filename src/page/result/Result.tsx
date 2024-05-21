@@ -82,6 +82,7 @@ const useResultStyles = makeStyles((theme) => ({
             width: "120px",
             fontSize: "13px !important"
         },
+
     },
     resultheading: {
         color: "var(--text-color)",

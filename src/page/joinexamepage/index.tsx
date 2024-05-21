@@ -1,10 +1,11 @@
-import { Box, Dialog, Paper } from '@mui/material';
+import Box from '@mui/material/Box';
+import Dialog from '@mui/material/Dialog';
+import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate, useParams } from 'react-router-dom';
 import adsIcon from '../../asset/images/banner/add-icon.png';
 import adsImg from "../../asset/logo/add.jpg";
-import WorkSpace from '../../components/container';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import usecategoryStyles from '../category/Category';
@@ -13,7 +14,14 @@ import { useSnackbar } from 'notistack';
 import Loader from '../../components/loader/Loader';
 import { useQuiz } from '../../context/quizContext';
 import { useWallet } from '../../context/walletContext';
-import { cardvalue } from '../../components/type';
+
+interface cardvalue {
+    id: number;
+    name: string;
+    totalPrice: string;
+    entryFee: string;
+    image: string;
+}
 
 const Joinexame = () => {
 
@@ -23,7 +31,7 @@ const Joinexame = () => {
     const examename = useParams()
     const { enqueueSnackbar } = useSnackbar();
     const { quizList, quizLoading, quizFetching, quizFetch } = useQuiz();
-    const { walletFetch } = useWallet();
+    const { walletList, walleterror, walletFetching, walletLoading, walletFetch } = useWallet();
     const [open, setOpen] = useState(false);
     const [openAds, setOpenAds] = useState(false);
 
@@ -76,7 +84,7 @@ const Joinexame = () => {
                             } else {
                                 if (coin && findCardValue) {
                                     const userwallet = JSON.parse(coin)
-                                    sessionStorage.setItem('coin', JSON.stringify(userwallet - findCardValue.entryFee));
+                                    sessionStorage.setItem('coin', JSON.stringify(userwallet - parseInt(findCardValue.entryFee)));
                                 }
                                 nevigate(`/play/${examename.id}`)
                             }
@@ -88,14 +96,14 @@ const Joinexame = () => {
                         sessionStorage.removeItem('date')
                         if (coin && findCardValue) {
                             const userwallet = JSON.parse(coin)
-                            sessionStorage.setItem('coin', JSON.stringify(userwallet - findCardValue.entryFee));
+                            sessionStorage.setItem('coin', JSON.stringify(userwallet - parseInt(findCardValue.entryFee)));
                         }
                         nevigate(`/play/${examename.id}`)
                     }
                 } else { // if date is not found in localstorage then enter to this block
                     if (coin && findCardValue) {
                         const userwallet = JSON.parse(coin)
-                        sessionStorage.setItem('coin', JSON.stringify(userwallet - findCardValue.entryFee));
+                        sessionStorage.setItem('coin', JSON.stringify(userwallet - parseInt(findCardValue.entryFee)));
                     }
                     nevigate(`/play/${examename.id}`)
                 }
@@ -107,7 +115,7 @@ const Joinexame = () => {
             }
         }
     }
-    
+
     const userData = localStorage.getItem('token')
     const moveloginpage = () => {
         nevigate(`/login`)
@@ -118,7 +126,7 @@ const Joinexame = () => {
         if (response?.data.status === 'ok') {
             if (response.data.response.length > 0) {
                 if (findCardValue) {
-                    const walletupdate = await postUpdateUserWallet(findCardValue.entryFee, 'remove')
+                    const walletupdate = await postUpdateUserWallet(parseInt(findCardValue.entryFee), 'remove')
                     if (walletupdate.data.status === 'ok') {
                         walletFetch();
                         nevigate(`/play/${examename.id}`)
@@ -145,7 +153,6 @@ const Joinexame = () => {
         }
     }
 
-
     return (
         <>
             <Dialog onClose={handleClose} open={open} className={classes.dialog}>
@@ -159,71 +166,67 @@ const Joinexame = () => {
             </Dialog>
             <Dialog onClose={handleCloseAds} open={openAds} className={classes.dialog}>
                 <Box className='closeIcon'><RxCross2 onClick={() => setOpenAds(false)} /></Box>
-                <div className="flex justify-center ads-box">
+                <div className="d-flex justify-center ads-box">
                     <img
                         src={adsImg}
                         alt="ad"
-                        style={{
-                            width: "100%",
-                            maxHeight: "320px",
-                        }}
+                        style={{ width: "100%", maxHeight: "320px" }}
                     />
                 </div>
             </Dialog>
-            <WorkSpace>
-                <Paper className={classes.setProductpape} elevation={5}>
-                    <Header />
-                    <div className={classes.loginscroll}>
-                        {quizLoading || quizFetching || Object.keys(quizList).length === 0 ?
-                            <Loader />
-                            :
-                            <>
-                                <div
-                                    className="flex justify-center ads-box"
-                                    style={{ marginBottom: 20 }}
-                                >
-                                    <img
-                                        src={adsImg}
-                                        alt="ad"
-                                        style={{
-                                            width: "100%",
-                                            maxHeight: "320px",
-                                        }}
-                                    />
-                                </div>
+            <Paper className={classes.setProductpape} elevation={5}>
+                <Header />
+                <div className={classes.loginscroll}>
+                    {quizLoading || quizFetching || Object.keys(quizList).length === 0 ?
+                        <Loader />
+                        :
+                        <>
+                            <div
+                                className="d-flex justify-center ads-box"
+                                style={{ marginBottom: 20 }}
+                            >
+                                <img
+                                    src={adsImg}
+                                    alt="ad"
+                                    style={{
+                                        width: "100%",
+                                        maxHeight: "320px",
+                                    }}
+                                />
+                            </div>
 
-                                <div className={classes.joinexamtop}>
-                                    <img src={findCardValue?.image} alt='logo' className={classes.setjoinexamimg} />
-                                    <div className={classes.joinexamdetail}>
-                                        <h6 className={classes.joinexamname}>{findCardValue?.name}</h6>
-                                        <h4 className={classes.joinexamwin}>play & Win {findCardValue?.totalPrice}</h4>
-                                    </div>
+                            <div className={classes.joinexamtop}>
+                                <img src={findCardValue?.image} alt='logo' className={classes.setjoinexamimg} />
+                                <div className={classes.joinexamdetail}>
+                                    <h6 className={classes.joinexamname}>{findCardValue?.name}</h6>
+                                    <h4 className={classes.joinexamwin}>play & Win {findCardValue?.totalPrice}</h4>
                                 </div>
-                                <div className={`flex ${classes.joinexammiddle}`}>
-                                    {userData ?
-                                        <button className={classes.joinexambtngest} onClick={handlestartquize_user} style={{ width: "200px" }}>Play</button>
-                                        :
-                                        <>
-                                            <button className={classes.joinexambtn} onClick={moveloginpage}>Join with name</button>
-                                            <span style={{ color: 'var(--text-color)' }}>OR</span>
-                                            <button className={classes.joinexambtngest} onClick={handlestartquize}>Play As Guest</button>
-                                        </>
-                                    }
-                                </div>
-                            </>
-                        }
+                            </div>
+                            <div className={`d-flex ${classes.joinexammiddle}`}>
+                                {userData ?
+                                    <button className={classes.joinexambtngest} onClick={handlestartquize_user} style={{ width: "200px" }}>Play</button>
+                                    :
+                                    <>
+                                        <button className={classes.joinexambtn} onClick={moveloginpage}>Join with name</button>
+                                        <span style={{ color: 'var(--text-color)' }}>OR</span>
+                                        <button className={classes.joinexambtngest} onClick={handlestartquize}>Play As Guest</button>
+                                    </>
+                                }
+                            </div>
+                        </>
+                    }
 
-                        <ul className={classes.joinexamterms} >
-                            <li className={classes.joinexamtermslist}>You've got 90 - 150 seconds to answer all questions</li>
-                            <li className={classes.joinexamtermslist}>Answer as many questions as you can</li>
-                            <li className={classes.joinexamtermslist}>For Every Correct answer you will get +50 points and will loose -25 points on every Incorrect answer</li>
-                            <li className={classes.joinexamtermslist}>You can take help by using the lifelines present in the contest.</li>
-                            <li className={classes.joinexamtermslist}>Lifelines can be used for free or by using a given amount of coins for each lifeline.</li>
-                        </ul>
-                    </div>
-                    <Footer />
-                </Paper>
-            </WorkSpace>
+                    <ul className={classes.joinexamterms}>
+                        <li className={classes.joinexamtermslist}>You've got 120 seconds to answer all questions</li>
+                        <li className={classes.joinexamtermslist}>Answer as many questions as you can</li>
+                        <li className={classes.joinexamtermslist}>For Every Correct answer you will get +75 points and will loose -30 points on every Incorrect answer</li>
+                        <li className={classes.joinexamtermslist}>You can take help by using the lifelines present in the contest.</li>
+                        <li className={classes.joinexamtermslist}>Lifelines can be used for free or by using a given amount of coins for each lifeline.</li>
+                    </ul>
+                </div>
+                <Footer />
+            </Paper>
+
         </>
     )
 }
