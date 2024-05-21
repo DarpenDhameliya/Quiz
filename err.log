@@ -1,0 +1,23 @@
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:217:20)
+Emitted 'error' event on Connection instance at:
+    at Connection._handleProtocolError (D:\mern\quiz\backend\node_modules\mysql\lib\Connection.js:423:8)
+    at Protocol.emit (node:events:513:28)
+    at Protocol._delegateError (D:\mern\quiz\backend\node_modules\mysql\lib\protocol\Protocol.js:398:10)
+    at Protocol.handleNetworkError (D:\mern\quiz\backend\node_modules\mysql\lib\protocol\Protocol.js:371:10)
+    at Connection._handleNetworkError (D:\mern\quiz\backend\node_modules\mysql\lib\Connection.js:418:18)
+    at Socket.emit (node:events:513:28)
+    at emitErrorNT (node:internal/streams/destroy:151:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+
+Node.js v18.10.0
