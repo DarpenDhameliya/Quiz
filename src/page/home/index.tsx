@@ -14,7 +14,8 @@ import useHomeStyles from './HomeStyle'
 import Loader from '../../components/loader/Loader'
 import { useQuiz } from '../../context/quizContext'
 import { useApp } from '../../context/categoryContext'
-import { cardvalue } from '../../components/type'
+import { getQuestions } from '../../api'
+
 interface category {
     id: number;
     name: string;
@@ -68,7 +69,9 @@ const Home = () => {
         if (Object.keys(categoryList).length === 0) {
             categoryFetch();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+ 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -88,6 +91,14 @@ const Home = () => {
     }, [nevigate])
 
     const CardView = useCallback(() => {
+        const callfun = async () => {
+            const response = await getQuestions('1')
+            console.log(response)
+        }
+        setTimeout(() => {
+
+            callfun()
+        }, 3000);
         const playedQuizid = sessionStorage.getItem('quiz')
         const playedDate = sessionStorage.getItem('date')
         if (playedQuizid && !userfind) {

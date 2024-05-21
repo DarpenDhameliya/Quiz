@@ -1,12 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import './App.css';
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AppProvider } from './context/categoryContext';
 import { QuizProvider } from './context/quizContext';
 import { WalletProvider } from './context/walletContext';
+import { SettingProvider } from './context/settingContext';
 
-const Router = lazy(() => import('./router'));
+const Routs = lazy(() => import('./router'));
 const queryClient = new QueryClient();
 
 function App() {
@@ -19,7 +20,9 @@ function App() {
             <AppProvider>
               <QuizProvider>
                 <WalletProvider>
-                  <Router />
+                  <SettingProvider>
+                    <Routs />
+                  </SettingProvider>
                 </WalletProvider>
               </QuizProvider>
             </AppProvider>

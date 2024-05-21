@@ -7,6 +7,7 @@ import logo from '../../asset/logo/Frame_3-removebg-preview.png';
 import useHeaderStyles from './HeaderStyle';
 import { useEffect, useState } from 'react';
 import { useWallet } from '../../context/walletContext';
+import { useWebDetail } from '../../context/settingContext';
 
 const Header: React.FC = () => {
     const [wallet, setWallet] = useState(0)
@@ -14,6 +15,7 @@ const Header: React.FC = () => {
     const location = useLocation();
     const nevigate = useNavigate();
     const { walletList, walletFetching, walletLoading, walletFetch } = useWallet();
+    const { webDetailList, webDetailLoading, webDetailFetching, webDetailFetch, webDetailerror } = useWebDetail()
     const userFind = localStorage.getItem('token')
     useEffect(() => {
         const coin = sessionStorage.getItem('coin')
@@ -25,8 +27,11 @@ const Header: React.FC = () => {
                 walletFetch();
             }
         }
+        if (Object.keys(webDetailList).length === 0) {
+            webDetailFetch();
+        }
     }, [])
-
+    // console.log(Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0)
     return (
         <>
             <div className={classes.mainheader}>
@@ -35,7 +40,7 @@ const Header: React.FC = () => {
                         <div className={classes.lefticon} onClick={() => nevigate(-1)}>
                             <SlArrowLeft />
                         </div>}
-                    <img src={logo} alt="logo" style={{ width: "40px" }} />
+                    <img src={Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0 ? webDetailList.response[0].image :logo} alt="logo" style={{ width: "40px" }} />
                 </div>
                 <div className='flex align-center'>
                     <div className='flex align-center'>

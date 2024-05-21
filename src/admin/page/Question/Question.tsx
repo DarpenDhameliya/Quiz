@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import useQuizStyles from "../category/QuizStyle";
@@ -23,6 +23,7 @@ import {
   getAllQuestionList,
   getFilteredQuestionList,
   postAddQuestionexcel,
+  postAddQuestions,
 } from "../../../api";
 
 import { useApp } from "../../../context/categoryContext";
@@ -79,6 +80,7 @@ const Question = () => {
   const [category_id, setCategory_id] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [date, setDate] = useState('')
   const classes = useQuizStyles();
   const { categoryList, categoryFetch, categoryLoading, categoryFetching } =
     useApp();
@@ -91,22 +93,12 @@ const Question = () => {
 
   useEffect(() => {
     if (Object.keys(categoryList).length === 0) {
-        categoryFetch();
+      categoryFetch();
     }
     if (Object.keys(quizList).length === 0) {
       quizFetch();
     }
 
-    const getAllQuestion = async () => {
-      const response = await getAllQuestionList();
-      if (response.data.status === "ok") {
-        setQuestion(response.data.response);
-      } else
-        enqueueSnackbar(response.data.error, {
-          variant: "error",
-          autoHideDuration: 2000,
-        });
-    };
     // getAllQuestion();
   }, []);
 
@@ -150,7 +142,6 @@ const Question = () => {
       formData.append("image", image);
     }
     const response = await postAddQuestionexcel(formData);
-    console.log(response);
   };
 
   const findQuizName = (quizId: any) => {
@@ -181,26 +172,23 @@ const Question = () => {
 
   const handleAddQuiz = () => {
     setOpen(true);
-    //   const data = {
-    //     title: name,
-    //     totalPrice,
-    //     entryFee,
-    //     category_id,
-    //     live,
-    // }
   };
 
-  const handleAddQuizDb = () => {
-    console.log(selectedIds, startTime, endTime, name ,entryFee, totalPrice, category_id, live);
-        const data = {
-        title: name,
-        totalPrice,
-        entryFee,
-        category_id,
-        live,
-        start_time:startTime,
-        end_time:endTime,
+  const handleAddQuizDb = async () => {
+    const data = {
+      question:selectedIds,
+      title: name,
+      totalPrice,
+      entryFee,
+      category_id,
+      live,
+      start_time: startTime,
+      end_time: endTime,
+      date
     }
+
+    const responce = await postAddQuestions(data)
+    console.log(responce)
   };
   return (
     <>
@@ -473,10 +461,10 @@ const Question = () => {
             size="small"
             variant="outlined"
             className={classes.settextfield}
-            placeholder="end time * "
+            placeholder="date * "
             InputLabelProps={{ shrink: false }}
-            value={endTime}
-            onChange={(e: any) => setEndTime(e.target.value)}
+            value={date}
+            onChange={(e: any) => setDate(e.target.value)}
           />
           <FormControl size="small" required>
             <Select

@@ -46,6 +46,7 @@ const Sidebar = () => {
             { to: "/admin/category", icon: <BiCookie />, name: 'Category' },
             { to: "/admin/quiz", icon: <BiBell />, name: 'Quiz' },
             { to: "/admin/question", icon: <BiMoney />, name: 'Questions' },
+            { to: "/admin/setting", icon: <BiMoney />, name: 'setting' },
         ]
         setMenu(data)
     }, [])

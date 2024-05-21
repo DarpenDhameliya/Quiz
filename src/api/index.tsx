@@ -153,7 +153,20 @@ export async function postAddQuestion(data: any) {
     return error.response
   }
 }
-
+export async function postAddQuestions(data: any) {
+  try {
+    return await request.post('/question/addque', data);
+  } catch (error: any) {
+    return error.response
+  }
+}
+export async function getQuestions(id: any) {
+  try {
+    return await request.get(`/question/getque/${id}`);
+  } catch (error: any) {
+    return error.response
+  }
+}
 export async function getQuestion(id: any) {
   try {
     return await request.get(`/question/editquestionlist/${id}`);
@@ -191,5 +204,37 @@ export async function postAddQuizAttempt(data: any) {
     return await request.post("/quizattempt/addattempt", data);
   } catch (error: any) {
     return error.response;
+  }
+}
+
+export async function getWebDetail() {
+  try {
+    return await request.get(`/web/list`);
+  } catch (error: any) {
+    return error.response
+  }
+}
+
+export async function postAddWebDetail(data: any) {
+  try {
+    return await request.post('/web/addwebdata', data);
+  } catch (error: any) {
+    return error.response
+  }
+}
+
+export async function postEditWebDetail(id: any, data: any) {
+  try {
+    return await request.post(`/web/editwebdata/${id}`, data);
+  } catch (error: any) {
+    return error.response
+  }
+}
+
+export async function postDeleteWebDetail(id: any) {
+  try {
+    return await request.post(`/web/removewebdata/${id}`);
+  } catch (error: any) {
+    return error.response
   }
 }
