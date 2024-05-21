@@ -12,14 +12,6 @@ import { useQuiz } from '../../context/quizContext';
 import { getQuestionList } from '../../api';
 import { useSnackbar } from 'notistack';
 
-// interface Question {
-//     _id: string;
-//     question: string;
-//     answer: string[];
-//     correct: string;
-//     time: string;
-//     coins: string;
-// }
 interface Question {
     id: string;
     question: string;

@@ -21,9 +21,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'var(--white-color) !important',
         display: 'flex',
         flexDirection: 'column',
-        width: '600px',
+        width: '700px',
         borderRadius: '16px !important',
-        margin: '0 20px',
         [theme.breakpoints.down('xs')]: {
             margin: '15px',
         },
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     loginscrollSignup: {
-        height: '85vh',
+        height: '100vh',
         background: 'var(--boxbg-color)',
         overflowY: 'auto',
         '&::-webkit-scrollbar': {
@@ -194,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
         background: 'none !important',
         display: 'flex',
         flexDirection: 'column',
-        width: '600px',
+        width: '700px',
         borderRadius: '14px !important',
     },
     coinsicon: {

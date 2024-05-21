@@ -27,32 +27,32 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ children }) => {
             style={{ background: `url(${workspaceBg})` }}
         >
             <div className="hero-banner">
-                <div className="shape-1 shape">
+                {/* <div className="shape-1 shape">
                     <img src={animation1} />
-                </div>
-                <div className="shape-2 shape">
+                </div> */}
+                {/* <div className="shape-2 shape">
                     <img src={animation2} />
-                </div>
-                <div className="shape-3 shape">
+                </div> */}
+                {/* <div className="shape-3 shape">
                     <img src={animation3} />
                 </div>
                 <div className="shape-4 shape">
                     <img src={animation4} />
-                </div>
-                <div className="shape-5 shape">
+                </div> */}
+                {/* <div className="shape-5 shape">
                     <img src={animation5} />
-                </div>
-                <div className="shape-6 shape">
+                </div> */}
+                {/* <div className="shape-6 shape">
                     <img src={animation6} />
-                </div>
-                <div className="shape-7 shape">
+                </div> */}
+                {/* <div className="shape-7 shape">
                     <img src={animation7} />
                 </div>
                 <div className="shape-8 shape">
                     <img src={animation8} />
-                </div>
-                <div className="shape-9 dots shape" />
-                <div className="shape-10 dots shape" />
+                </div> */}
+                {/* <div className="shape-9 dots shape" /> */}
+                {/* <div className="shape-10 dots shape" /> */}
                 <div className="shape-11 shape">
                     <img src={animation11} />
                 </div>
