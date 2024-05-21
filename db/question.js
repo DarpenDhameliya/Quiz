@@ -93,6 +93,79 @@ const getFielteredData = async (searchData, searchByQuizId, pageNumber, skip) =>
     return result;
 };
 
+// const getQuestionData = async (id) => {
+//     const selectQuestiondata = `
+//     SELECT qd.*, q.question, q.answer, q.correct 
+//     FROM quizData qd
+//     LEFT JOIN questions q ON qd.id = q.id
+//     WHERE qd.id = ?
+// `; const result = await queryPromise(selectQuestiondata, id);
+//     return result;
+// };
+const getQuestionData = async (id) => {
+    const selectQuestionData = `
+    SELECT 
+        qd.id AS quizData_id,
+        qd.category_id,
+        qd.title,
+        qd.start_time,
+        qd.end_time,
+        qd.date,
+        qd.entryFee,
+        qd.totalPrice,
+        q.id AS question_id,
+        q.question,
+        q.answer,
+        q.correct
+    FROM 
+        quizData qd
+    JOIN 
+        questions q ON FIND_IN_SET(q.id, REPLACE(REPLACE(qd.question, '[', ''), ']', '')) > 0
+    WHERE 
+        qd.id = ?
+`;
+    const result = await queryPromise(selectQuestionData, [id]);
+    const groupedResult = result.reduce((acc, item) => {
+        console.log(item)
+        const {
+            quizData_id,
+            category_id,
+            title,
+            start_time,
+            end_time,
+            date,
+            question_id,
+            question,
+            entryFee,
+            totalPrice,
+            answer,
+            correct
+        } = item;
+        if (!acc[quizData_id]) {
+            acc[quizData_id] = {
+                quizData_id,
+                category_id,
+                title,
+                start_time,
+                end_time,
+                date,
+                entryFee,
+                totalPrice,
+                questions: []
+            };
+        }
+        acc[quizData_id].questions.push({
+            question_id,
+            question,
+            answer,
+            correct
+        });
+        return acc;
+    }, {});
+    console.log(groupedResult)
+    return Object.values(groupedResult);
+};
+
 const selectSpecificQuestionData = async (id) => {
     const selectQuestiondata = `SELECT * FROM questions WHERE id = ?`;
     const result = await queryPromise(selectQuestiondata, id);
@@ -108,6 +181,11 @@ const addQuestionCsv = async (values) => {
 const addQuestion = async (categogy) => {
     const selectQuestiondata = `INSERT INTO questions SET ?`;
     const result = await queryPromise(selectQuestiondata, categogy);
+    return result;
+};
+const addQuestions = async (data) => {
+    const selectQuestiondata = `INSERT INTO quizData SET ?`;
+    const result = await queryPromise(selectQuestiondata, data);
     return result;
 };
 
@@ -149,5 +227,7 @@ module.exports = {
     deleteQuestion,
     addQuestionCsv,
     selectAllQuestionData,
-    getFielteredDataTotalCount
+    getFielteredDataTotalCount,
+    addQuestions,
+    getQuestionData
 };

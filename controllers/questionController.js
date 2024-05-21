@@ -1,7 +1,7 @@
 const { successmessage, errormessage } = require("../response/response");
 const path = require("path");
 const fs = require("fs");
-const { selectQuestionData, selectSpecificQuestionData, addQuestion, deleteQuestion, editQuestion, getFielteredDataTotalCount, getFielteredData, selectAllQuestionData } = require("../db/question");
+const { selectQuestionData, selectSpecificQuestionData, addQuestion, deleteQuestion, editQuestion, getFielteredDataTotalCount, getFielteredData, selectAllQuestionData, addQuestions, getQuestionData } = require("../db/question");
 const Authenticate = require("../middleware/authMiddleware");
 var xlsx = require("xlsx");
 
@@ -21,6 +21,15 @@ const getAllQuestionData = async (req, res) => {
         return res.status(400).json(errormessage(error.message));
     }
 };
+const getQuestions = async (req, res) => {
+    try {
+        const response = await getQuestionData(req.params.id);
+        // console.log(response)
+        return res.status(200).json(successmessage(response));
+    } catch (error) {
+        return res.status(500).json(errormessage(error.message));
+    }
+};
 
 const getFilteredData = async (req, res) => {
     try {
@@ -33,7 +42,7 @@ const getFilteredData = async (req, res) => {
 
         const totalRecords = await getFielteredDataTotalCount(req.query.data, req.params.byQuiz);
         const response = await getFielteredData(req.query.data, req.params.byQuiz, perPage, skip);
-        return res.status(200).json(successmessage({data: response,perPage, totalPage: Math.ceil(totalRecords / perPage)}));
+        return res.status(200).json(successmessage({ data: response, perPage, totalPage: Math.ceil(totalRecords / perPage) }));
     } catch (error) {
         return res.status(500).json(errormessage(error.message));
     }
@@ -102,6 +111,31 @@ const postAddQuestion = async (req, res) => {
             coins: req.body.coins
         }
         const response = await addQuestion(dbData);
+        return res.status(200).json(successmessage("Add successfully"));
+    } catch (error) {
+        return res.status(500).json(errormessage(error.message));
+    }
+};
+const postAddQuestions = async (req, res) => {
+    try {
+        const { question, title, totalPrice, entryFee, category_id, live, start_time, end_time, date } = req.body
+
+        if (req.type === 'user') {
+            return res.status(401).json(errormessage('Unauthorized'));
+        }
+        const dbData = {
+            question: JSON.stringify(question),
+            title,
+            totalPrice,
+            entryFee,
+            category_id,
+            live,
+            start_time,
+            end_time,
+            date
+        }
+
+        const response = await addQuestions(dbData);
         return res.status(200).json(successmessage("Add successfully"));
     } catch (error) {
         return res.status(500).json(errormessage(error.message));
@@ -182,5 +216,7 @@ module.exports = {
     postDeleteQuestion,
     postAddExcelQuestion,
     getAllQuestionDataForAdmin,
-    getFilteredData
+    getFilteredData,
+    postAddQuestions,
+    getQuestions
 };
