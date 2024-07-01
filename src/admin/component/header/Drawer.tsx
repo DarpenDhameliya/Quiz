@@ -33,7 +33,7 @@ const Sidebar = () => {
     }, [mobileSidebaropen]);
 
     const handleLogout = useCallback(() => {
-        navigate('/ad-login')
+        navigate('/online-admin')
         localStorage.removeItem('email')
         localStorage.removeItem('token')
     }, [])

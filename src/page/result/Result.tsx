@@ -1,33 +1,46 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useResultStyles = makeStyles((theme) => ({
-    setProductpape: {
-        textAlign: "left",
-        backgroundColor: "var(--white-color) !important",
-        display: "flex",
-        flexDirection: "column",
-        width: "600px",
-        maxWidth: "600px",
-        minWidth: "300px",
-        borderRadius: "16px !important",
-        margin: "0 10px",
-        [theme.breakpoints.down('xs')]: {
-            margin: '15px',
-        },
+    quizPaper: {
+        // textAlign: "left",
+        // backgroundColor: "var(--white-color) !important",
+        // display: "flex",
+        // flexDirection: "column",
+        // width: "600px",
+        // maxWidth: "600px",
+        // minWidth: "300px",
+        // borderRadius: "16px !important",
+        // margin: "0 10px",
+        // [theme.breakpoints.down('xs')]: {
+        //     margin: '15px',
+        // },
+
+        position: "relative",
+        textAlign: 'left',
+            backgroundColor: 'var(--white-color) !important',
+            display: 'flex',
+            flexDirection: 'column',
+            // margin: '0 20px',
+            width:700,
+            borderRadius: '15px !important',
+            height: '100vh',
+            [theme.breakpoints.down('xs')]: {
+                height: "calc(100vh - 45px)",
+                margin: '15px',
+            },
     },
 
-    loginscroll: {
-        height: "85vh",
-        background: "var(--boxbg-color)",
-        overflowY: "auto",
-        "&::-webkit-scrollbar": {
-            display: "none",
+    middleportion: {
+        height: 'inherit',
+        background: '#000',
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+            display: 'none',
         },
-        padding: "15px",
+        padding: '15px',
         [theme.breakpoints.down('xs')]: {
-            height: "calc(100vh - 60px)",
-            borderRadius:"15px !important",
-            padding: '15px',
+            padding: "12px !important",
+            height: "100%",
         },
     },
     profilemiddle: {
@@ -46,7 +59,7 @@ const useResultStyles = makeStyles((theme) => ({
         padding: "10px 15px",
         // backgroundImage: "linear-gradient(180deg, #7b4bff 0%, #a35eff 100%)",
         color: "var(--text-color)",
-        background: '#122448',
+        background: '#181818',
         marginRight: "10px",
         borderStyle: 'none',
         display: 'flex',
@@ -61,15 +74,15 @@ const useResultStyles = makeStyles((theme) => ({
     },
     profilejoinbtn: {
         padding: "10px 15px",
-        backgroundColor: "#122448 !important",
+        backgroundColor: "#181818 !important",
         color: "var(--text-color) !important",
-        border: "1px solid var(--gredient-color) !important",
+        border: "1px solid #181818 !important",
         borderRadius: "10px !important",
         width: "180px !important",
     },
     joinexambtngest: {
         padding: "10px 15px",
-        background: '#122448',
+        background: '#181818',
         color: "var(--text-color)",
         marginLeft: "10px",
         borderStyle: 'none',

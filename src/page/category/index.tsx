@@ -60,10 +60,10 @@ const Category = () => {
       return (<>
         {filteredList?.map((data: any) => {
           return <Grid item xs={12} sm={6} key={data.id}>
-            <div className={classes.cardmaindiv} onClick={() => handleCategoryDetails(data.id)}>
+            <div className={classes.card} onClick={() => handleCategoryDetails(data.id)}>
               <div className='d-flex align-center'>
                 <div className={classes.cardimgmain}>
-                  <img src={data.image} alt='quize logo' className={classes.cardimage} />
+                  <img src={data.image} alt='quize logo' className={classes.card_image} />
                 </div>
                 <div className={classes.cardmiddle}>
                   <div className='d-flex justify-between flex-column align-end' >
@@ -82,11 +82,11 @@ const Category = () => {
   }, [categoryList, searchval, quizFetching])
 
   return (
-      <Paper className={classes.setProductpape} elevation={5}>
+      <Paper className={classes.quizPaper} elevation={5}>
         <Header />
 
-        <div className={classes.loginscroll}>
-          <TextField id="outlined-basic" size="small" type="text" value={searchval} onChange={(e) => setSearchval(e.target.value)} className='mt-10 w-full' placeholder="Enter Phone Number" variant="outlined" InputProps={{ sx: { borderRadius: 5, mt: 1, border: "1px solid var(--whitebglight-color)", color: 'var(--text-color)' }, startAdornment: (<InputAdornment style={{ color: "var(--whitebglight-color)" }} position="start"><BsSearch /></InputAdornment>) }} />
+        <div className={classes.middleportion}>
+          <TextField id="outlined-basic" size="small" type="text" value={searchval} onChange={(e) => setSearchval(e.target.value)} className='mt-10 w-full' placeholder="Enter Category" variant="outlined" InputProps={{ sx: { borderRadius: 5, mt: 1, border: "1px solid var(--whitebglight-color)", color: 'var(--text-color)' }, startAdornment: (<InputAdornment style={{ color: "var(--whitebglight-color)" }} position="start"><BsSearch /></InputAdornment>) }} />
           <div className={classes.sliderBorder} />
           <Grid container spacing={2} >
             {(categoryLoading || categoryFetching || Object.keys(categoryList).length === 0 || Object.keys(quizList).length === 0) ?

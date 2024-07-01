@@ -87,9 +87,9 @@ const AdLogin = () => {
 
     return (
         <WorkSpace>
-            <Paper className={classes.setProductpape} elevation={5}>
+            <Paper className={classes.quizPaper} elevation={5}>
                 <Header />
-                <div className={classes.loginscroll}>
+                <div className={classes.middleportion}>
                     <Typography variant="h5" className={classes.signupheading} gutterBottom>
                         Join for Quize
                     </Typography>

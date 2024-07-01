@@ -29,6 +29,7 @@ function App() {
           </QueryClientProvider>
         </SnackbarProvider>
       </Suspense>
+      {/* <div className="loader"></div> */}
     </>
   );
 }

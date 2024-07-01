@@ -36,7 +36,9 @@ const Setting = () => {
     }, [])
 
     useEffect(() => {
-        if (Object.keys(webDetailList).length > 0) {
+        if (Object.keys(webDetailList).length > 0 && webDetailList.response.length > 0) {
+
+        // if (Object.keys(webDetailList).length > 0) {
             setUpdateData(true)
             setUpdateId(webDetailList.response[0].id)
             setWebName(webDetailList.response[0].websitename)

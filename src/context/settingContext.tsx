@@ -33,7 +33,7 @@ export const SettingProvider = ({ children }: { children: React.ReactNode }) => 
     useEffect
         (() => {
             if (webDetail) {
-                setWebDetailList(webDetail.data)
+                // setWebDetailList(webDetail.data)
                 if (webDetail.status === 401) {
                     nevigate('/login')
                 }

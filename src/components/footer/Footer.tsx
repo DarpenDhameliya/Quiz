@@ -25,8 +25,8 @@ const Footer: React.FC = () => {
 
     return (
         <>
-            <div className={classes.mainFooter}>
-                <div className={`d-flex align-center pointer flex-column w-100 ${(getLocation && getLocation === '/category') && classes.selcetdFooter}`} onClick={() => handlenevigate('category')} >
+            <div className={classes.mainFooterTest}>
+                <div className={`d-flex align-center justify-center h-12 pointer flex-column w-100 ${(getLocation && getLocation === '/category') && classes.selcetdFooter}`} onClick={() => handlenevigate('category')} >
                     {getLocation && getLocation === '/category' ?
                         <BiSolidGridAlt className='fs-15 color-white' />
                         :

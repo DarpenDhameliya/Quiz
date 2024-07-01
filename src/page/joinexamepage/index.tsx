@@ -166,7 +166,7 @@ const Joinexame = () => {
             </Dialog>
             <Dialog onClose={handleCloseAds} open={openAds} className={classes.dialog}>
                 <Box className='closeIcon'><RxCross2 onClick={() => setOpenAds(false)} /></Box>
-                <div className="d-flex justify-center ads-box">
+                <div className="d-flex justify-center adsContent">
                     <img
                         src={adsImg}
                         alt="ad"
@@ -174,25 +174,25 @@ const Joinexame = () => {
                     />
                 </div>
             </Dialog>
-            <Paper className={classes.setProductpape} elevation={5}>
+            <Paper className={classes.quizPaper} elevation={5}>
                 <Header />
-                <div className={classes.loginscroll}>
+                <div className={classes.middleportion}>
                     {quizLoading || quizFetching || Object.keys(quizList).length === 0 ?
                         <Loader />
                         :
                         <>
                             <div
-                                className="d-flex justify-center ads-box"
+                                className="d-flex justify-center adsContent"
                                 style={{ marginBottom: 20 }}
                             >
-                                <img
+                                {/* <img
                                     src={adsImg}
                                     alt="ad"
                                     style={{
                                         width: "100%",
                                         maxHeight: "320px",
                                     }}
-                                />
+                                /> */}
                             </div>
 
                             <div className={classes.joinexamtop}>
@@ -216,12 +216,12 @@ const Joinexame = () => {
                         </>
                     }
 
-                    <ul className={classes.joinexamterms}>
-                        <li className={classes.joinexamtermslist}>You've got 120 seconds to answer all questions</li>
-                        <li className={classes.joinexamtermslist}>Answer as many questions as you can</li>
-                        <li className={classes.joinexamtermslist}>For Every Correct answer you will get +75 points and will loose -30 points on every Incorrect answer</li>
-                        <li className={classes.joinexamtermslist}>You can take help by using the lifelines present in the contest.</li>
-                        <li className={classes.joinexamtermslist}>Lifelines can be used for free or by using a given amount of coins for each lifeline.</li>
+                    <ul className={classes.examterms}>
+                        <li className={classes.examtermslist}>You've got 120 seconds to answer all questions</li>
+                        <li className={classes.examtermslist}>Answer as many questions as you can</li>
+                        <li className={classes.examtermslist}>For Every Correct answer you will get +75 points and will loose -30 points on every Incorrect answer</li>
+                        <li className={classes.examtermslist}>You can take help by using the lifelines present in the contest.</li>
+                        <li className={classes.examtermslist}>Lifelines can be used for free or by using a given amount of coins for each lifeline.</li>
                     </ul>
                 </div>
                 <Footer />

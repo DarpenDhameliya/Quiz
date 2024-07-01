@@ -35,13 +35,14 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <div className={classes.mainheader}>
+            <div className={classes.mainheaderTest}>
                 <div className='d-flex align-center'>
                     {location.pathname === '/login' &&
                         <div className={classes.lefticon} onClick={() => nevigate(-1)}>
                             <SlArrowLeft />
                         </div>}
-                    <img src={Object.keys(webDetailList).length > 0 ? webDetailList.response[0].image : logo} alt="logo" style={{ width: "40px" }} />
+                    {/* <img src={Object.keys(webDetailList).length > 0 ? webDetailList.response[0].image : logo} alt="logo" style={{ width: "40px" }} /> */}
+                    <img src={(JSON.stringify(webDetailList.response) !== JSON.stringify([]) && Object.keys(webDetailList).length > 0 && webDetailList.status === 'ok') ? webDetailList.response[0].image : logo} alt="logo" style={{ width: "40px" }} />
                 </div>
                 <div className='d-flex align-center'>
                     <div className='d-flex align-center'>

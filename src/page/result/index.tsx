@@ -41,14 +41,15 @@ const ResultIndex = () => {
         )
     }
 
+    console.log('walletList',walletList)
     return (
-        <Paper className={classes.setProductpape} elevation={5}>
-            <div className={classes.loginscroll}>
+        <Paper className={classes.quizPaper} elevation={5}>
+            <div className={classes.middleportion}>
                 <div
-                    className="d-flex justify-center ads-box"
+                    className="d-flex justify-center adsContent"
                     style={{ marginTop: 10 }}
                 >
-                    <img
+                    {/* <img
                         src={adsImg}
                         alt="ad"
                         style={{
@@ -56,20 +57,20 @@ const ResultIndex = () => {
                             maxHeight: "auto",
                             borderRadius: "15px",
                         }}
-                    />
+                    /> */}
                 </div>
                 <div className={`d-flex justify-center ${classes.resultheading}`}>
                     Well Played
                 </div>
                 <div className={classes.resultgif}>
-                    <img
+                    {/* <img
                         src={resultImg}
                         alt="ad"
                         style={{
                             width: "100%",
                             maxHeight: "200px",
                         }}
-                    />
+                    /> */}
                 </div>
                 <div className={`d-flex ${classes.profilemiddle}`}>
                     <button className={`${classes.joinexambtn} fs-15`}>
